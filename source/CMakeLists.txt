@@ -11,7 +11,7 @@ unset(msg)
 set(x 10)
 set(y 10)
 
-math(EXPR add "${x} / ${y}")
+math(EXPR z "${x} * ${y}")
 
 message("${z}")
 
@@ -20,7 +20,20 @@ set(hindi FALSE)
 
 if (${totoo} OR ${hindi})
   message("Totoo ako!")
-else()
+endif()
+
+if(${totoo} AND (${z} GREATER 1))
   message("Aray ko!")
 endif()
 
+if (DEFINED meow)
+  message("meow is defined!")
+else()
+  message("meow is undefined!")
+endif()
+
+if (EXISTS main.cpp)
+  message("main.cpp exists!")
+else()
+  message("main.cpp does not exist!")
+endif()
