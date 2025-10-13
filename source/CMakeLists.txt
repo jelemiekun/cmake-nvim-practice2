@@ -21,3 +21,8 @@ add_executable(GameExe src/main.cpp)
 target_link_libraries(GameExe PUBLIC GameLib spdlog::spdlog)
 target_link_libraries(GameLib PUBLIC spdlog::spdlog)
 
+if (DEFINED gameMsg)
+  message("-- A message from Game/CMakeLists.txt: ${gameMsg}")
+else()
+  message("-- Did not received the message from Game/CMakeLists.txt!")
+endif()
