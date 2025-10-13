@@ -37,3 +37,11 @@ if (EXISTS main.cpp)
 else()
   message("main.cpp does not exist!")
 endif()
+
+add_subdirectory(game)
+
+if (TARGET s_Game)
+  message("s_Game is defined")
+else()
+  message("s_Game not defined")
+endif()
