@@ -18,4 +18,4 @@ add_subdirectory(src/Game)
 add_executable(GameExe src/main.cpp)
 
 target_link_libraries(GameExe PUBLIC game_cpp spdlog::spdlog)
-target_link_libraries(game_cpp PUBLIC spdlog::spdlog)
+target_link_libraries(GameLib PUBLIC spdlog::spdlog)
