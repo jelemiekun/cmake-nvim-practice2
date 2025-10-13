@@ -1,47 +1,21 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(practice LANGUAGES CXX C)
+project(Practice LANGUAGES C CXX)
 
-set(msg "Hello World!")
+message("-- Configuring CXX...")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-message("${msg}")
+message("-- Finding packages...")
+find_package(spdlog REQUIRED)
 
-unset(msg)
+message("-- Reading CMakeLists.txt from ${CMAKE_CURRENT_SOURCE_DIR}")
+message("-- Initiating top level CMakeLists.txt")
 
-set(x 10)
-set(y 10)
+add_subdirectory(src/Game)
 
-math(EXPR z "${x} * ${y}")
+add_executable(GameExe src/main.cpp)
 
-message("${z}")
-
-set(totoo TRUE)
-set(hindi FALSE)
-
-if (${totoo} OR ${hindi})
-  message("Totoo ako!")
-endif()
-
-if(${totoo} AND (${z} GREATER 1))
-  message("Aray ko!")
-endif()
-
-if (DEFINED meow)
-  message("meow is defined!")
-else()
-  message("meow is undefined!")
-endif()
-
-if (EXISTS main.cpp)
-  message("main.cpp exists!")
-else()
-  message("main.cpp does not exist!")
-endif()
-
-add_subdirectory(game)
-
-if (TARGET s_Game)
-  message("s_Game is defined")
-else()
-  message("s_Game not defined")
-endif()
+target_link_libraries(GameExe PUBLIC game_cpp spdlog::spdlog)
+target_link_libraries(game_cpp PUBLIC spdlog::spdlog)
