@@ -13,9 +13,11 @@ find_package(spdlog REQUIRED)
 message("-- Reading CMakeLists.txt from ${CMAKE_CURRENT_SOURCE_DIR}")
 message("-- Initiating top level CMakeLists.txt")
 
+message("-- Adding subdirectories...")
 add_subdirectory(src/Game)
 
 add_executable(GameExe src/main.cpp)
 
-target_link_libraries(GameExe PUBLIC game_cpp spdlog::spdlog)
+target_link_libraries(GameExe PUBLIC GameLib spdlog::spdlog)
 target_link_libraries(GameLib PUBLIC spdlog::spdlog)
+
