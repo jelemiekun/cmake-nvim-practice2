@@ -3,14 +3,24 @@ cmake_minimum_required(VERSION 3.20)
 project(practice LANGUAGES CXX C)
 
 set(msg "Hello World!")
-set(x 5)
+
+message("${msg}")
+
+unset(msg)
+
+set(x 10)
 set(y 10)
 
-math(EXPR z "(${x} + ${y}) / 5")
+math(EXPR add "${x} / ${y}")
 
-message(${msg})
-message("(${x} + ${y}) / 5 = ${z}")
+message("${z}")
 
-set()
+set(totoo TRUE)
+set(hindi FALSE)
 
-if (${z})
+if (${totoo} OR ${hindi})
+  message("Totoo ako!")
+else()
+  message("Aray ko!")
+endif()
+
