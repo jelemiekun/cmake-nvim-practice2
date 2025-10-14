@@ -31,14 +31,3 @@ add_executable(${EXE_NAME} src/main.cpp)
 if (COMMAND link_all)
   link_all()
 endif()
-
-
-
-
-
-
-
-if (COMMAND prac)
-  set(new_list P J N)
-  prac("${new_list}")
-endif()

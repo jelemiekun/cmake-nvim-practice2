@@ -25,32 +25,3 @@ function(link_all)
 
   target_link_libraries(${EXE_NAME} PUBLIC spdlog)
 endfunction()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function(print_list_details user_list)
-  list(LENGTH user_list length)
-
-  message("---- List Values: ${user_list}")
-  message("---- List Length: ${length}")
-endfunction()
-
-function(prac new_list)
-  set(myVar A B C D E)
-  list(LENGTH myVar myVarLength)
-  print_list_details("${myVar}")
-  list(APPEND myVar "${ARGV}")
-  print_list_details("${myVar}")
-endfunction()
