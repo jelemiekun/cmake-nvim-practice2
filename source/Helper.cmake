@@ -1,3 +1,4 @@
+include_guard()
 message("-- Loading file ${CMAKE_CURRENT_LIST_FILE}")
 
 function(find_packages packages)
