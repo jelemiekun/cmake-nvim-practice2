@@ -32,4 +32,5 @@ if (COMMAND link_all)
   link_all()
 endif()
 
-# TODO:Practice loops (foreach and while)
+# TODO: Practice loops (foreach and while)
+# TODO: Add sub libraries then add_subdirectory()
