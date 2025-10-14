@@ -23,5 +23,5 @@ endfunction()
 function(link_all)
   message("-- Linking all targets...")
 
-  target_link_libraries(${EXE_NAME} PUBLIC spdlog)
+  target_link_libraries(${EXE_NAME} PUBLIC spdlog::spdlog)
 endfunction()
