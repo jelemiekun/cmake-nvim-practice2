@@ -8,16 +8,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(READY_TO_COMPILE FALSE)
 
-message("-- Hello from ${CMAKE_CURRENT_SOURCE_DIR}")
+message("-- Reading cmake file from ${CMAKE_CURRENT_SOURCE_DIR}")
 
-include(FindPackages.cmake)
+add_subdirectory(src/Game)
+
+include(Find_Packages.cmake)
 find_packages()
 
 if (READY_TO_COMPILE)
   message("-- Creating executable...")
   add_executable(GameExe src/main.cpp)
 
-  target_link_libraries(GameExe PUBLIC spdlog::spdlog)
+  target_link_libraries(GameExe PUBLIC GameLib spdlog::spdlog)
 else()
   message("-- Failed to create an executable.")
 endif()

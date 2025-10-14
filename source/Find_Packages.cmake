@@ -1,6 +1,6 @@
 include_guard()
 
-message("-- Hello from ${CMAKE_CURRENT_LIST_FILE}")
+message("-- Reading cmake file from ${CMAKE_CURRENT_LIST_FILE}")
 
 function(find_packages)
   message("-- Finding packages...")
