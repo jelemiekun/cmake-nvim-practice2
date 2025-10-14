@@ -31,3 +31,5 @@ add_executable(${EXE_NAME} src/main.cpp)
 if (COMMAND link_all)
   link_all()
 endif()
+
+# TODO:Practice loops (foreach and while)
