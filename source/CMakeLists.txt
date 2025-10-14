@@ -1,28 +1,23 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(Practice LANGUAGES C CXX)
+project(Practice_CMake LANGUAGES C CXX)
 
-message("-- Configuring CXX...")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-message("-- Finding packages...")
-find_package(spdlog REQUIRED)
+set(READY_TO_COMPILE FALSE)
 
-message("-- Reading CMakeLists.txt from ${CMAKE_CURRENT_SOURCE_DIR}")
-message("-- Initiating top level CMakeLists.txt")
+message("-- Hello from ${CMAKE_CURRENT_SOURCE_DIR}")
 
-message("-- Adding subdirectories...")
-add_subdirectory(src/Game)
+include(FindPackages.cmake)
+find_packages()
 
-add_executable(GameExe src/main.cpp)
+if (READY_TO_COMPILE)
+  message("-- Creating executable...")
+  add_executable(GameExe src/main.cpp)
 
-target_link_libraries(GameExe PUBLIC GameLib spdlog::spdlog)
-target_link_libraries(GameLib PUBLIC spdlog::spdlog)
-
-if (DEFINED gameMsg)
-  message("-- A message from Game/CMakeLists.txt: ${gameMsg}")
+  target_link_libraries(GameExe PUBLIC spdlog::spdlog)
 else()
-  message("-- Did not received the message from Game/CMakeLists.txt!")
+  message("-- Failed to create an executable.")
 endif()
