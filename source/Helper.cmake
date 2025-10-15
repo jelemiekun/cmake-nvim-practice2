@@ -24,7 +24,8 @@ endfunction()
 function(link_all)
   message("-- Linking all targets...")
 
-  target_link_libraries(${EXE_NAME} PUBLIC spdlog::spdlog)
+  target_link_libraries(${EXE_NAME} PUBLIC spdlog::spdlog Game)
+  target_link_libraries(Game PUBLIC spdlog::spdlog)
 endfunction()
 
 function(practice)
