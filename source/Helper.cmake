@@ -26,3 +26,27 @@ function(link_all)
 
   target_link_libraries(${EXE_NAME} PUBLIC spdlog::spdlog)
 endfunction()
+
+function(practice)
+  message("-- Reading Practice Function...")
+  set(newList "")
+  set(index 1)
+
+  # Read and print index value
+  while(index LESS 10)
+    message("-- index = ${index}")
+    
+    # Perform index + 10 then add to newList
+    math(EXPR varToNewList "${index} + 10")
+    list(APPEND newList ${varToNewList})
+
+    # Increment index variable
+    math(EXPR incremented "${index} + 1")
+    set(index ${incremented})
+  endwhile()
+
+  # Read and print newList
+  foreach(number IN LISTS newList)
+    message("-- newList: ${number}")
+  endforeach()
+endfunction()
