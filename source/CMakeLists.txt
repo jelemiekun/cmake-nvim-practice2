@@ -21,7 +21,7 @@ set(PACKAGES_FOUND)
 
 # Helpers
 include(${HELPER_FILE} RESULT_VARIABLE HELPER_INCLUSION_SUCCESS)
-if (HELPER_INCLUSION_SUCCESS)
+if (NOT "${HELPER_INCLUSION_SUCCESS}" STREQUAL "NOTFOUND")
   message("-- Successfully loaded ${HELPER_FILE}")
 else()
   message("-- Failed to load ${HELPER_FILE}")
@@ -43,6 +43,21 @@ if (COMMAND link_all)
 endif()
 
 # Practice
+set(PRAC_INCLUSION_SUCCESS FALSE)
+set(PRAC_FILE Prac)
+
+include(${PRAC_FILE} OPTIONAL RESULT_VARIABLE PRAC_INCLUSION_SUCCESS)
+if (NOT "${PRAC_INCLUSION_SUCCESS}" STREQUAL "NOTFOUND")
+  message("-- Successfully loaded ${PRAC_FILE}")
+else()
+  message("-- Failed to load ${PRAC_FILE}")
+endif()
+
+if (COMMAND prac_prac)
+  cmake_print_properties("${PRAC_FILE}")
+  prac_prac()
+endif()
+
 if(COMMAND practice)
   #  practice()
 endif()
