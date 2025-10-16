@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.20)
 
 project(CMakeExercise LANGUAGES CXX C)
 
+# Append cmake/ on CMAKE_MODULE_PATH
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 # Configuration
 message("-- Configuring CMake and CXX...")
 set(CMAKE_CXX_STANDARD 17)
@@ -12,7 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 message("-- Setting up variables...")
 set(EXE_NAME GameExe)
 set(HELPER_INCLUSION_SUCCESS FALSE)
-set(HELPER_FILE Helper.cmake)
+set(HELPER_FILE Helper)
 set(PACKAGES_TO_FIND spdlog SDL2 glm)
 set(PACKAGES_FOUND)
 
