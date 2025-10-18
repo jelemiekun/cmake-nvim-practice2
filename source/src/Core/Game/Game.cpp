@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <SDL2/SDL.h>
+#include <glad/glad.h>
 #include <spdlog/spdlog.h>
 
 // Constructors and Destructors
