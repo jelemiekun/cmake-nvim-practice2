@@ -18,7 +18,9 @@ public:
 
   // Class Private Attributes
   SDL_Window *m_Window;
+  SDL_GLContext m_GLContext;
   bool m_Running;
+  float deltaTime;
 
   // Class Public Methods
 public:
@@ -26,9 +28,20 @@ public:
 
   // Class Private Methods
 private:
+  // Initializers
   void setOpenGLAttributes();
   bool initSDL();
   bool initWindow();
   bool initOpenGLContext();
   bool loadGLAD();
+
+  // Game Loop
+  void gameLoop();
+
+  void handle_input();
+  void update();
+  void render();
+
+  // Others
+  void calculateDeltaTime();
 };

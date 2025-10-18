@@ -1,10 +1,11 @@
 #include "Game.h"
 #include <SDL2/SDL.h>
+#include <SDL_events.h>
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
 
 // Constructors and Destructors
-Game::Game() {
+Game::Game() : m_Window(nullptr) {
   spdlog::info("[Game::Game]: An instance of Game class has created.");
 }
 
@@ -23,6 +24,14 @@ void Game::run() {
   spdlog::info("Initiating game...");
 
   m_Running = initSDL() && initWindow() && initOpenGLContext();
+
+  if (m_Running) {
+    spdlog::info("Entering game loop...");
+
+    gameLoop();
+  } else {
+    spdlog::error("Initialization failed. Failed to enter game loop.");
+  }
 }
 
 // Class Private Methods
@@ -65,10 +74,59 @@ bool Game::initWindow() {
   }
 }
 
+bool Game::initOpenGLContext() {
+  m_GLContext = SDL_GL_CreateContext(m_Window);
+  if (!m_GLContext) {
+    spdlog::error("SDL_GL_CreateContext failed: {}", SDL_GetError());
+    return false;
+  }
+
+  SDL_GL_SetSwapInterval(
+      0); // Disable VSync: allows rendering at uncapped FPS instead of syncing
+          // to monitor's refresh rate (e.g., 60Hz)
+  spdlog::info("SDL Context created successfully.");
+  return true;
+}
+
 bool Game::loadGLAD() {
   if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
     spdlog::error("Failed to initialize GLAD.");
     return false;
   }
+  spdlog::info("GLAD loaded successfully.");
   return true;
+}
+
+void Game::gameLoop() {
+  while (m_Running) {
+    handle_input();
+    update();
+    render();
+  }
+  spdlog::info("Gameloop terminated.");
+}
+
+void Game::handle_input() {
+  SDL_Event event;
+  while (SDL_PollEvent(&event)) {
+    if (event.type == SDL_QUIT)
+      m_Running = false;
+  }
+}
+
+void Game::update() {}
+
+void Game::render() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  SDL_GL_SwapWindow(m_Window);
+}
+
+void Game::calculateDeltaTime() {
+  static Uint64 lastCounter = SDL_GetPerformanceCounter();
+  Uint64 currentCounter = SDL_GetPerformanceCounter();
+
+  deltaTime = static_cast<float>(currentCounter - lastCounter) /
+              static_cast<float>(SDL_GetPerformanceFrequency());
+
+  lastCounter = currentCounter;
 }

@@ -5,7 +5,6 @@ function(setup_standard_project)
 
   set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
   message(STATUS "Standard project setup done.")
 endfunction()
@@ -14,7 +13,7 @@ function(find_packages)
   message(STATUS "Finding packages: ${ARGV}")
 
   foreach(package IN ITEMS ${ARGV})
-    find_package(${package} REQUIRED)
+    find_package(${package} REQUIRED CONFIG)
     message(STATUS "Package ${package} found.")
   endforeach()
 
@@ -41,8 +40,8 @@ endfunction()
 function(link_all)
   message(STATUS "Linking all targets...")
 
-  target_link_libraries(GameExe PUBLIC spdlog::spdlog Game)
-  target_link_libraries(Game PUBLIC spdlog::spdlog glad)
+  target_link_libraries(GameExe PUBLIC spdlog::spdlog SDL2::SDL2 Game)
+  target_link_libraries(Game PUBLIC spdlog::spdlog SDL2::SDL2 glad)
 
   message(STATUS "All targets linked.")
 endfunction()
