@@ -23,7 +23,9 @@ Game *Game::getInstance() {
 void Game::run() {
   spdlog::info("Initiating game...");
 
-  m_Running = initSDL() && initWindow() && initOpenGLContext();
+  setOpenGLAttributes();
+
+  m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD();
 
   if (m_Running) {
     spdlog::info("Entering game loop...");
