@@ -26,6 +26,8 @@ function(create_source_libraries)
 
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Game")
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Vendors/glad")
+  add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Shader")
+  add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Practice")
 
   message(STATUS "Source libraries created.")
 endfunction()
@@ -42,7 +44,9 @@ function(link_all)
   message(STATUS "Linking all targets...")
 
   target_link_libraries(GameExe PUBLIC spdlog::spdlog SDL2::SDL2 Game)
-  target_link_libraries(Game PUBLIC spdlog::spdlog SDL2::SDL2 glad)
+  target_link_libraries(Game PUBLIC spdlog::spdlog SDL2::SDL2 glad Practice)
+  target_link_libraries(Shader PUBLIC glad)
+  target_link_libraries(Practice SDL2::SDL2 )
 
   message(STATUS "All targets linked.")
 endfunction()

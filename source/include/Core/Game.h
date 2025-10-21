@@ -38,7 +38,7 @@ private:
   // Game Loop
   void gameLoop();
 
-  void handle_input();
+  void handleInput();
   void update();
   void render();
 

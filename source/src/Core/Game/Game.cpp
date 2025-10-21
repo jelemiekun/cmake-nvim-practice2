@@ -1,6 +1,8 @@
 #include "Game.h"
+#include "Practice.h"
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
+#include <SDL_video.h>
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
 
@@ -63,9 +65,9 @@ bool Game::initSDL() {
 }
 
 bool Game::initWindow() {
-  m_Window =
-      SDL_CreateWindow("OpenGL Window", SDL_WINDOWPOS_CENTERED,
-                       SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL);
+  m_Window = SDL_CreateWindow("OpenGL Window", SDL_WINDOWPOS_CENTERED,
+                              SDL_WINDOWPOS_CENTERED, 800, 600,
+                              SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
   if (!m_Window) {
     spdlog::error("Window creation failed: {}", SDL_GetError());
@@ -101,25 +103,33 @@ bool Game::loadGLAD() {
 
 void Game::gameLoop() {
   while (m_Running) {
-    handle_input();
+    handleInput();
     update();
     render();
   }
   spdlog::info("Gameloop terminated.");
 }
 
-void Game::handle_input() {
+void Game::handleInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
     if (event.type == SDL_QUIT)
       m_Running = false;
+
+    Practice::handleInput(event);
   }
 }
 
-void Game::update() {}
+void Game::update() {
+  calculateDeltaTime();
+  Practice::update(deltaTime);
+}
 
 void Game::render() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  Practice::render();
+
   SDL_GL_SwapWindow(m_Window);
 }
 
