@@ -7,6 +7,10 @@ function(setup_standard_project)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
+  if (WIN32 AND MSVC)
+      add_compile_options("/utf-8")
+  endif()
+
   message(STATUS "Standard project setup done.")
 endfunction()
 
@@ -14,7 +18,22 @@ function(find_packages)
   message(STATUS "Finding packages: ${ARGV}")
 
   foreach(package IN ITEMS ${ARGV})
-    find_package(${package} REQUIRED CONFIG)
+    if(UNIX)
+        message(STATUS "Finding ${package} package for linux operating system...")
+        find_package(${package} CONFIG REQUIRED)
+    elseif(WIN32)
+        message(STATUS "Finding ${package} package for windows operating system...")
+
+        if(DEFINED ENV{VCPKG_ROOT})
+            list(APPEND CMAKE_PREFIX_PATH "$ENV{VCPKG_ROOT}/installed/x64-windows")
+        else()
+            message(WARNING "VCPKG_ROOT not defined. Please set it or pass the toolchain file.")
+        endif()
+
+        find_package(${package} CONFIG REQUIRED)
+    else()
+        message(STATUS "Current operating system not ...")
+    endif()
     message(STATUS "Package ${package} found.")
   endforeach()
 

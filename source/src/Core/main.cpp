@@ -1,3 +1,4 @@
+#define SDL_MAIN_HANDLED
 #include "Game.h"
 #include <spdlog/spdlog.h>
 
