@@ -49,11 +49,13 @@ function(create_source_libraries)
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Engine/Mesh")
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Engine/Model")
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Engine/ImGUI")
-  add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Engine/Practice")
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Engine/Shader")
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Engine/Texture2D")
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Engine/VertexArray")
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Engine/VertexBuffer")
+
+  add_subdirectory("${CMAKE_SOURCE_DIR}/src/Core/Gameplay/Practice")
+  
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Vendors/stb_image")
   add_subdirectory("${CMAKE_SOURCE_DIR}/src/Vendors/glad")
 
