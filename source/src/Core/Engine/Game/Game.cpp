@@ -142,3 +142,7 @@ void Game::calculateDeltaTime() {
 
   lastCounter = currentCounter;
 }
+
+// TODO: init imgui
+// TODO: imgui source file
+// TODO: build imgui repo
