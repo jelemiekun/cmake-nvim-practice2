@@ -1,7 +1,7 @@
 message(STATUS "Loading file ${CMAKE_CURRENT_LIST_FILE}")
 
 add_library(Texture2D "${CMAKE_CURRENT_LIST_DIR}/Texture2D.cpp")
-target_include_directories(Texture2D PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../../include/Core")
+target_include_directories(Texture2D PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../../../include/Core")
 
 if (TARGET Texture2D)
   message(STATUS "Target Texture2D successfully created.")
