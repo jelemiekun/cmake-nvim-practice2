@@ -1,6 +1,6 @@
 #include "Model.h"
+#include "stb_image.h"
 #include <spdlog/spdlog.h>
-#include <stb_image.h>
 
 unsigned int TextureFromFile(const char *path, const std::string &directory,
                              const aiScene *scene, bool gamma = false);
