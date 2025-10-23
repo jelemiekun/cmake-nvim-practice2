@@ -1,5 +1,11 @@
 #include "Practice.h"
 
+void Practice::init() {
+  //
+  //
+  //
+}
+
 void Practice::handleInput(SDL_Event &event) {
   //
   //

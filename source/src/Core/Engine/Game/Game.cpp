@@ -30,6 +30,9 @@ void Game::run() {
   m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD();
 
   if (m_Running) {
+    spdlog::info("Initializing practice...");
+    Practice::init();
+
     spdlog::info("Entering game loop...");
 
     gameLoop();
