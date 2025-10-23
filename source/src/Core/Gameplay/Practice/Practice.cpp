@@ -1,4 +1,7 @@
 #include "Practice.h"
+#include "Model.h"
+
+static Model model("/../../../../../../assets/models/sphere.obj");
 
 void Practice::init() {
   //
