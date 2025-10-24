@@ -1,9 +1,10 @@
 #include "Practice.h"
 #include "Model.h"
 
-static Model model("/../../../../../../assets/models/sphere.obj");
+static Model model;
 
 void Practice::init() {
+  model.loadModel(std::string(ASSET_PATH) + "models/earth_1.glb");
   //
   //
   //

@@ -25,13 +25,14 @@ public:
 
   bool gammaCorrection;
 
+  Model(bool gamma = false);
   Model(std::string const &path, bool gamma = false);
+  void loadModel(std::string const &path);
   void Draw(Shader &shader, const glm::mat4 &model);
   void syncSoftBodyVertices(); // Optionally remove this, only used for soft
                                // body physics
 
 private:
-  void loadModel(std::string const &path);
   void processNode(aiNode *node, const aiScene *scene,
                    const glm::mat4 &parentTransform);
   Mesh processMesh(aiMesh *mesh, const aiScene *scene);

@@ -40,6 +40,12 @@ function(find_packages)
   message(STATUS "Packages finding process done.")
 endfunction()
 
+function(compile_definitions)
+  message(STATUS "Creating compile definitions...")
+  add_compile_definitions(ASSET_PATH="${CMAKE_SOURCE_DIR/assets}")
+  message(STATUS "Compile definitions created.")
+endfunction()
+
 function(create_source_libraries)
   message(STATUS "Creating source libraries...")
 

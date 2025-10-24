@@ -13,6 +13,7 @@ include(Util)
 
 setup_standard_project()
 find_packages(${packages})
+compile_definitions()
 create_source_libraries()
 create_executables()
 link_all()
