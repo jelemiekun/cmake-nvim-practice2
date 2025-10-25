@@ -1,5 +1,6 @@
 #include "Practice.h"
 #include "Model.h"
+#include <spdlog/spdlog.h>
 
 static Model model;
 

@@ -42,7 +42,7 @@ endfunction()
 
 function(compile_definitions)
   message(STATUS "Creating compile definitions...")
-  add_compile_definitions(ASSET_PATH="${CMAKE_SOURCE_DIR/assets}")
+  add_compile_definitions(ASSET_PATH="${CMAKE_SOURCE_DIR}/../assets/")
   message(STATUS "Compile definitions created.")
 endfunction()
 
