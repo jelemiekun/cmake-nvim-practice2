@@ -62,6 +62,7 @@ void Mesh::Draw(Shader &shader, const glm::mat4 &model) {
     glBindTexture(GL_TEXTURE_2D, textures[i].id);
   }
 
+  // Sets glsl model matrix
   shader.setMat4("u_Model", model * transform);
 
   // Draws the mesh
