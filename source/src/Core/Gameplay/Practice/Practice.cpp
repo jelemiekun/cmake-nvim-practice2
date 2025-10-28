@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "Shader.h"
 #include <cmath>
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/trigonometric.hpp>
 #include <spdlog/spdlog.h>
@@ -44,6 +45,7 @@ static unsigned int VBO2;
 static unsigned int EBO2;
 
 static glm::vec3 color(0.0f);
+static glm::mat4 rect1Transform(1.0f);
 
 void Practice::init() {
   { // Shader init
@@ -108,14 +110,29 @@ void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
 }
 
 void Practice::update(const float &deltaTime) {
-  static int r = 0;
-  float rV = sin(r++);
-  static int g = 2;
-  float gV = sin(g++);
-  static int b = 10;
-  float bV = sin(b++);
+  { // shader
+    rect1Transform = glm::rotate(rect1Transform, glm::radians(90.0f),
+                                 glm::vec3(1.0f, 0.0f, 0.0f));
 
-  color = glm::vec3(rV, gV, bV);
+    shader.bind();
+    shader.setMat4("u_Transform", rect1Transform);
+    shader.unbind();
+  }
+
+  { // shader1
+    static int r = 0;
+    static int g = 2;
+    static int b = 10;
+    float rV = sin(r++);
+    float gV = sin(g++);
+    float bV = sin(b++);
+
+    color = glm::vec3(rV, gV, bV);
+
+    shader1.bind();
+    shader1.setVec3("u_Color", color);
+    shader1.unbind();
+  }
 }
 
 void Practice::render() {
@@ -127,7 +144,7 @@ void Practice::render() {
 
   shader1.bind();
   glBindVertexArray(VAO2);
-  shader1.setVec3("u_Color", color);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+  glBindVertexArray(0);
   shader1.unbind();
 }
