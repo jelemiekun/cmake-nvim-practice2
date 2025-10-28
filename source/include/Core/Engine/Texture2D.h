@@ -11,8 +11,10 @@ private:
   int bpp;
 
 public:
-  Texture2D(const std::string &path);
+  Texture2D();
   ~Texture2D();
+
+  void init(const std::string &path);
 
   void bind(unsigned int slot = 0) const;
   void unbind() const;

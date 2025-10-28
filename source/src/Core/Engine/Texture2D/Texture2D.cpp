@@ -3,9 +3,13 @@
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
 
-Texture2D::Texture2D(const std::string &path)
-    : rendererID(0), filePath(path), localBuffer(nullptr), width(0), height(0),
-      bpp(0) {
+Texture2D::Texture2D()
+    : rendererID(0), filePath(""), localBuffer(nullptr), width(0), height(0),
+      bpp(0) {}
+
+Texture2D::~Texture2D() { glDeleteTextures(1, &rendererID); }
+
+void Texture2D::init(const std::string &path) {
   stbi_set_flip_vertically_on_load(true);
 
   glGenTextures(1, &rendererID);
@@ -30,8 +34,6 @@ Texture2D::Texture2D(const std::string &path)
 
   glBindTexture(GL_TEXTURE_2D, 0);
 }
-
-Texture2D::~Texture2D() { glDeleteTextures(1, &rendererID); }
 
 void Texture2D::bind(unsigned int slot) const {
   glActiveTexture(GL_TEXTURE0 + slot);
