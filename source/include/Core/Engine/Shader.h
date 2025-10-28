@@ -23,9 +23,10 @@ private:
 public:
   GLuint ID;
 
-  Shader(const char *sourcePath);
+  Shader();
   ~Shader();
 
+  void init(const char *sourcePath);
   void bind() const;
   void unbind() const;
   void setBool(const std::string &name, bool value);

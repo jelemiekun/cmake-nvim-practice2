@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Camera.h"
 #include "Practice.h"
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
@@ -119,7 +120,7 @@ void Game::handleInput() {
     if (event.type == SDL_QUIT)
       m_Running = false;
 
-    Practice::handleInput(event);
+    Practice::handleInput(event, m_Window);
   }
 }
 
