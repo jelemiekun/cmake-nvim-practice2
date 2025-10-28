@@ -1,5 +1,5 @@
 #shader vertex
-#version 410
+#version 410 core
 
 layout(location = 0) in vec3 L_coordinate;
 layout(location = 1) in vec3 L_normal;
@@ -20,3 +20,8 @@ void main() {
     v_Normal = mat3(transpose(inverse(u_Model))) * L_normal;
     v_TexCoord = L_texCoord;
 }
+
+#shader fragment
+#version 410 core
+
+out vec4 FragColor;
