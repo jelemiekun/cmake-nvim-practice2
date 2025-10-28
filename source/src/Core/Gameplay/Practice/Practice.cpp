@@ -17,8 +17,8 @@ static unsigned int indices[] = {
 
 static Shader shader;
 
-static unsigned int VBO;
 static unsigned int VAO;
+static unsigned int VBO;
 static unsigned int EBO;
 
 void Practice::init() {
