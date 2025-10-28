@@ -1,6 +1,7 @@
 #pragma once
 #include <glad/glad.h>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/vector_float3.hpp>
 #include <glm/glm.hpp>
 #include <string>
 #include <unordered_map>
@@ -32,6 +33,7 @@ public:
   void setBool(const std::string &name, bool value);
   void setInt(const std::string &name, int value);
   void setFloat(const std::string &name, float value);
+  void setVec3(const std::string &name, const glm::vec3 &value);
   void setMat4(const std::string &name, const glm::mat4 &value);
   void clean();
 };
