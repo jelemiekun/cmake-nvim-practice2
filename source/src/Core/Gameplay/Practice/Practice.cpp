@@ -34,6 +34,7 @@ void Practice::update(const float &deltaTime) {
 }
 
 void Practice::render() {
+  model.Draw(shader);
   //
   //
   //

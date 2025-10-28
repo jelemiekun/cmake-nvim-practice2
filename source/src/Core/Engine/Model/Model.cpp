@@ -12,7 +12,7 @@ Model::Model(std::string const &path, bool gamma) : gammaCorrection(gamma) {
 
 Model::Model(bool gamma) : gammaCorrection(gamma) {}
 
-void Model::Draw(Shader &shader, const glm::mat4 &model) {
+void Model::Draw(Shader &shader) {
   for (unsigned int i = 0; i < meshes.size(); i++)
     meshes[i].Draw(shader, model);
 }

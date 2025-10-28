@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <glm/ext/matrix_float4x4.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <string>
@@ -15,6 +16,7 @@
 
 class Model {
 public:
+  glm::mat4 model;
   std::vector<Texture> textures_loaded;
   std::vector<Mesh> meshes;
   std::string directory;
@@ -28,7 +30,7 @@ public:
   Model(bool gamma = false);
   Model(std::string const &path, bool gamma = false);
   void loadModel(std::string const &path);
-  void Draw(Shader &shader, const glm::mat4 &model);
+  void Draw(Shader &shader);
   void syncSoftBodyVertices(); // Optionally remove this, only used for soft
                                // body physics
 
