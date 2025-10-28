@@ -1,7 +1,9 @@
 #include "Practice.h"
 #include "Model.h"
 #include "Shader.h"
+#include <cmath>
 #include <glm/ext/vector_float3.hpp>
+#include <glm/trigonometric.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
 
@@ -106,19 +108,14 @@ void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
 }
 
 void Practice::update(const float &deltaTime) {
-  color.r += 0.01;
-  color.g += 0.02;
-  color.b += 0.03;
+  static int r = 0;
+  float rV = sin(r++);
+  static int g = 2;
+  float gV = sin(g++);
+  static int b = 10;
+  float bV = sin(b++);
 
-  if (color.r >= 1.0f)
-    color.r = 0;
-  if (color.g >= 1.0f)
-    color.g = 0;
-  if (color.b >= 1.0f)
-    color.b = 0;
-  //
-  //
-  //
+  color = glm::vec3(rV, gV, bV);
 }
 
 void Practice::render() {
@@ -133,7 +130,4 @@ void Practice::render() {
   shader1.setVec3("u_Color", color);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   shader1.unbind();
-  //
-  //
-  //
 }
