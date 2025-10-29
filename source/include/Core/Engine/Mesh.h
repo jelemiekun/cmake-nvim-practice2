@@ -28,7 +28,7 @@ public:
   glm::mat4 transform;
   Mesh(std::vector<Vertex> verts, std::vector<unsigned int> inds,
        std::vector<Texture> texs);
-  void Draw(Shader &shader, const glm::mat4 &model);
+  void Draw(Shader &shader);
 
   // Optionally remove this, only used for soft body physics
   void updateVertices(const std::vector<float> &newVertices);

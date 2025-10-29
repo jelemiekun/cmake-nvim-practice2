@@ -16,7 +16,6 @@
 
 class Model {
 public:
-  glm::mat4 model;
   std::vector<Texture> textures_loaded;
   std::vector<Mesh> meshes;
   std::string directory;

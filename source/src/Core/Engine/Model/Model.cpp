@@ -14,7 +14,7 @@ Model::Model(bool gamma) : gammaCorrection(gamma) {}
 
 void Model::Draw(Shader &shader) {
   for (unsigned int i = 0; i < meshes.size(); i++)
-    meshes[i].Draw(shader, model);
+    meshes[i].Draw(shader);
 }
 
 // Optionally remove this, only used for soft body physics

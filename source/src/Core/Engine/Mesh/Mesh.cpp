@@ -45,7 +45,7 @@ void Mesh::setupMesh() {
   glBindVertexArray(0);
 }
 
-void Mesh::Draw(Shader &shader, const glm::mat4 &model) {
+void Mesh::Draw(Shader &shader) {
   int diffuseNum = 0;
   int specularNum = 0;
   // Binds all the textures to their own texture units and sets the respective
@@ -61,9 +61,6 @@ void Mesh::Draw(Shader &shader, const glm::mat4 &model) {
     shader.setInt("material." + name + number, i);
     glBindTexture(GL_TEXTURE_2D, textures[i].id);
   }
-
-  // Sets glsl model matrix
-  shader.setMat4("u_Model", model * transform);
 
   // Draws the mesh
   glBindVertexArray(vao);
