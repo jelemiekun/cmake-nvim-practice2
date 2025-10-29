@@ -3,8 +3,11 @@
 #include "Game.h"
 #include "Model.h"
 #include "Shader.h"
+#include <SDL_events.h>
+#include <SDL_keycode.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/trigonometric.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -32,6 +35,19 @@ void Practice::init() {
 void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
   camera.processKeyboard(event, window);
   camera.processMouseMotion(event);
+
+  if (event.type == SDL_KEYDOWN) {
+    switch (event.key.keysym.sym) {
+    case SDLK_EQUALS:
+      model.transform =
+          glm::scale(model.transform, glm::vec3(1.5f, 1.5f, 1.5f));
+      break;
+    case SDLK_MINUS:
+      model.transform =
+          glm::scale(model.transform, glm::vec3(0.5f, 0.5f, 0.5f));
+      break;
+    }
+  }
   //
   //
   //
