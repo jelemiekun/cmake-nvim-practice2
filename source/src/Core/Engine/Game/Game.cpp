@@ -31,6 +31,9 @@ void Game::run() {
   m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD();
 
   if (m_Running) {
+    spdlog::info("Initializing openGL Viewport...");
+    initGLViewPort();
+
     spdlog::info("Initializing practice...");
     Practice::init();
 
@@ -69,8 +72,12 @@ bool Game::initSDL() {
 }
 
 bool Game::initWindow() {
+  int initWindowWidth = 800;
+  int initWindowHeight = 600;
+
   m_Window = SDL_CreateWindow("OpenGL Window", SDL_WINDOWPOS_CENTERED,
-                              SDL_WINDOWPOS_CENTERED, 800, 600,
+                              SDL_WINDOWPOS_CENTERED, initWindowWidth,
+                              initWindowHeight,
                               SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
 
   if (!m_Window) {
@@ -78,6 +85,9 @@ bool Game::initWindow() {
     return false;
   } else {
     spdlog::info("Window created successfully.");
+
+    m_WindowWidth = initWindowWidth;
+    m_WindowHeight = initWindowHeight;
     return true;
   }
 }
@@ -105,6 +115,8 @@ bool Game::loadGLAD() {
   return true;
 }
 
+void Game::initGLViewPort() { glViewport(0, 0, m_WindowWidth, m_WindowHeight); }
+
 void Game::gameLoop() {
   while (m_Running) {
     handleInput();
@@ -119,6 +131,13 @@ void Game::handleInput() {
   while (SDL_PollEvent(&event)) {
     if (event.type == SDL_QUIT)
       m_Running = false;
+    if (event.type == SDL_WINDOWEVENT &&
+        event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+      m_WindowWidth = event.window.data1;
+      m_WindowHeight = event.window.data2;
+
+      glViewport(0, 0, m_WindowWidth, m_WindowHeight);
+    }
 
     Practice::handleInput(event, m_Window);
   }

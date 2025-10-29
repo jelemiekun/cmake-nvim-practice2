@@ -19,6 +19,7 @@ public:
   std::vector<Texture> textures_loaded;
   std::vector<Mesh> meshes;
   std::string directory;
+  glm::mat4 transform;
 
   // Optionally remove this two, only used for soft body physics
   std::vector<float> flatVertices;
@@ -29,6 +30,7 @@ public:
   Model(bool gamma = false);
   Model(std::string const &path, bool gamma = false);
   void loadModel(std::string const &path);
+  void update(Shader &shader);
   void Draw(Shader &shader);
   void syncSoftBodyVertices(); // Optionally remove this, only used for soft
                                // body physics

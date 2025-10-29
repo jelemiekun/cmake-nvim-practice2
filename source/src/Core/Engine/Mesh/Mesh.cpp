@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include <glm/ext/matrix_float4x4.hpp>
 
 Mesh::Mesh(std::vector<Vertex> verts, std::vector<unsigned int> inds,
            std::vector<Texture> texs)
@@ -45,7 +46,7 @@ void Mesh::setupMesh() {
   glBindVertexArray(0);
 }
 
-void Mesh::Draw(Shader &shader) {
+void Mesh::update(Shader &shader, const glm::mat4 &transform) {
   int diffuseNum = 0;
   int specularNum = 0;
   // Binds all the textures to their own texture units and sets the respective
@@ -62,10 +63,15 @@ void Mesh::Draw(Shader &shader) {
     glBindTexture(GL_TEXTURE_2D, textures[i].id);
   }
 
+  glm::mat4 transformedMesh = transform * this->transform;
+  shader.setMat4("u_Model", transformedMesh);
+}
+
+void Mesh::Draw(Shader &shader) {
   // Draws the mesh
   glBindVertexArray(vao);
   glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-  glBindVertexArray(vao);
+  glBindVertexArray(0);
   // Resets the active texture unit
   glActiveTexture(GL_TEXTURE0);
 }

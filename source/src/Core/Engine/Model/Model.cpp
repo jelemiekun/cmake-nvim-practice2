@@ -1,16 +1,23 @@
 #include "Model.h"
 #include "stb_image.h"
+#include <glm/ext/matrix_float4x4.hpp>
 #include <spdlog/spdlog.h>
 
 unsigned int TextureFromFile(const char *path, const std::string &directory,
                              const aiScene *scene, bool gamma = false);
 static glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &from);
 
-Model::Model(std::string const &path, bool gamma) : gammaCorrection(gamma) {
+Model::Model(std::string const &path, bool gamma)
+    : gammaCorrection(gamma), transform(glm::mat4(1.0f)) {
   loadModel(path);
 }
 
-Model::Model(bool gamma) : gammaCorrection(gamma) {}
+Model::Model(bool gamma) : gammaCorrection(gamma), transform(glm::mat4(1.0f)) {}
+
+void Model::update(Shader &shader) {
+  for (unsigned int i = 0; i < meshes.size(); i++)
+    meshes[i].update(shader, transform);
+}
 
 void Model::Draw(Shader &shader) {
   for (unsigned int i = 0; i < meshes.size(); i++)

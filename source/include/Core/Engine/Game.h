@@ -21,6 +21,8 @@ public:
   SDL_GLContext m_GLContext;
   bool m_Running;
   float deltaTime;
+  int m_WindowWidth;
+  int m_WindowHeight;
 
   // Class Public Methods
 public:
@@ -34,6 +36,7 @@ private:
   bool initWindow();
   bool initOpenGLContext();
   bool loadGLAD();
+  void initGLViewPort();
 
   // Game Loop
   void gameLoop();
