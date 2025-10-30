@@ -74,11 +74,22 @@ void ImGUIWindow::render() {
   // Your GUI code
   static bool showExtraInfo = false;
   ImGui::Begin("Light");
-  ImGui::SeparatorText("Color");
   {
+    ImGui::SeparatorText("Color");
     ImGui::SliderFloat("r:", &ProgramValues::lightColor.r, 0.0f, 1.0f, "%.2f");
     ImGui::SliderFloat("g:", &ProgramValues::lightColor.g, 0.0f, 1.0f, "%.2f");
     ImGui::SliderFloat("b:", &ProgramValues::lightColor.b, 0.0f, 1.0f, "%.2f");
+  }
+  {
+    ImGui::SeparatorText("Ambient");
+    ImGui::SliderFloat("ambientStrength:", &ProgramValues::ambientStrength,
+                       0.0f, 1.0f, "%.2f");
+  }
+  {
+    ImGui::SeparatorText("Light Position");
+    ImGui::DragFloat("_X", &ProgramValues::lightPos.r, 0.05f);
+    ImGui::DragFloat("_Y", &ProgramValues::lightPos.g, 0.05f);
+    ImGui::DragFloat("_Z", &ProgramValues::lightPos.b, 0.05f);
   }
   ImGui::End();
 

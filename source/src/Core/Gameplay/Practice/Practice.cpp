@@ -18,12 +18,16 @@ Camera ProgramValues::camera;
 Model ProgramValues::model;
 glm::mat4 ProgramValues::projection;
 glm::vec3 ProgramValues::lightColor;
+float ProgramValues::ambientStrength = 0.2f;
+glm::vec3 ProgramValues::lightPos(0.0f, 10.0f, 0.0f);
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
 static Camera *camera = &ProgramValues::camera;
 static Model *model = &ProgramValues::model;
 static glm::mat4 *projection = &ProgramValues::projection;
 static glm::vec3 *lightColor = &ProgramValues::lightColor;
+static float *ambientStrength = &ProgramValues::ambientStrength;
+static glm::vec3 *lightPos = &ProgramValues::lightPos;
 
 void Practice::init() {
   glEnable(GL_DEPTH_TEST);
@@ -58,9 +62,6 @@ void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
       break;
     }
   }
-  //
-  //
-  //
 }
 
 void Practice::update(const float &deltaTime) {
@@ -72,16 +73,15 @@ void Practice::update(const float &deltaTime) {
   shaderObject->setMat4("u_View", camera->getViewMatrix());
 
   shaderObject->setVec3("u_LightColor", *lightColor);
+  shaderObject->setFloat("u_AmbientStrength", *ambientStrength);
+  shaderObject->setVec3("u_LightPos", *lightPos);
   shaderObject->unbind();
-  //
-  //
-  //
 }
 
 void Practice::render() {
   shaderObject->bind();
+  glEnable(GL_CULL_FACE);
   model->Draw(*shaderObject);
+  glDisable(GL_CULL_FACE);
   shaderObject->unbind();
-  //
-  //
 }
