@@ -17,21 +17,11 @@ Shader ProgramValues::shaderObject;
 Camera ProgramValues::camera;
 Model ProgramValues::model;
 glm::mat4 ProgramValues::projection;
-glm::vec3 ProgramValues::lightColor;
-float ProgramValues::ambientStrength = 0.2f;
-float ProgramValues::specularStrength = 1.0f;
-float ProgramValues::specularShininess = 36;
-glm::vec3 ProgramValues::lightPos(0.0f, 10.0f, 0.0f);
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
 static Camera *camera = &ProgramValues::camera;
 static Model *model = &ProgramValues::model;
 static glm::mat4 *projection = &ProgramValues::projection;
-static glm::vec3 *lightColor = &ProgramValues::lightColor;
-static float *ambientStrength = &ProgramValues::ambientStrength;
-static float *specularStrength = &ProgramValues::specularStrength;
-static float *specularShininess = &ProgramValues::specularShininess;
-static glm::vec3 *lightPos = &ProgramValues::lightPos;
 
 void Practice::init() {
   glEnable(GL_DEPTH_TEST);
@@ -46,8 +36,6 @@ void Practice::init() {
       glm::perspective(glm::radians(60.0f),
                        (float)game->m_WindowWidth / (float)game->m_WindowHeight,
                        0.001f, 1000.0f);
-
-  *lightColor = glm::vec3(1.0f);
 }
 
 void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
@@ -78,13 +66,9 @@ void Practice::update(const float &deltaTime) {
   shaderObject->setMat4("u_View", camera->getViewMatrix());
 
   // General Light Property
-  shaderObject->setVec3("u_LightColor", *lightColor);
-  shaderObject->setVec3("u_LightPos", *lightPos);
-  shaderObject->setVec3("u_ViewPos", camera->position);
+  // TODO: light position, ambient, diffuse, and specular
 
-  shaderObject->setFloat("u_AmbientStrength", *ambientStrength);
-  shaderObject->setFloat("u_SpecularStrength", *specularStrength);
-  shaderObject->setFloat("u_SpecularShininess", *specularShininess);
+  shaderObject->setVec3("u_ViewPos", camera->position);
 
   shaderObject->unbind();
 }

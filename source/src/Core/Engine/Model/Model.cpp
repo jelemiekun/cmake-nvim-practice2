@@ -3,20 +3,24 @@
 #include <glm/ext/matrix_float4x4.hpp>
 #include <spdlog/spdlog.h>
 
-unsigned int TextureFromFile(const char *path, const std::string &directory,
-                             const aiScene *scene, bool gamma = false);
+static unsigned int TextureFromFile(const char *path,
+                                    const std::string &directory,
+                                    const aiScene *scene, bool gamma = false);
 static glm::mat4 aiMatrix4x4ToGlm(const aiMatrix4x4 &from);
 
 Model::Model(std::string const &path, bool gamma)
-    : gammaCorrection(gamma), transform(glm::mat4(1.0f)) {
+    : transform(glm::mat4(1.0f)), ambient(glm::vec3(0.2f)), shininess(32),
+      gammaCorrection(gamma) {
   loadModel(path);
 }
 
-Model::Model(bool gamma) : gammaCorrection(gamma), transform(glm::mat4(1.0f)) {}
+Model::Model(bool gamma)
+    : transform(glm::mat4(1.0f)), ambient(glm::vec3(0.2f)), shininess(32),
+      gammaCorrection(gamma) {}
 
 void Model::update(Shader &shader) {
   for (unsigned int i = 0; i < meshes.size(); i++)
-    meshes[i].update(shader, transform);
+    meshes[i].update(shader, transform, ambient, shininess);
 }
 
 void Model::Draw(Shader &shader) {
@@ -94,20 +98,10 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     }
 
     if (mesh->mTextureCoords[0]) {
-      glm::vec2 vec;
-      vec.x = mesh->mTextureCoords[0][i].x;
-      vec.y = mesh->mTextureCoords[0][i].y;
-      vertex.TexCoords = vec;
-
-      vector.x = mesh->mTangents[i].x;
-      vector.y = mesh->mTangents[i].y;
-      vector.z = mesh->mTangents[i].z;
-      vertex.Tangent = vector;
-
-      vector.x = mesh->mBitangents[i].x;
-      vector.y = mesh->mBitangents[i].y;
-      vector.z = mesh->mBitangents[i].z;
-      vertex.Bitangent = vector;
+      glm::vec2 texCoord;
+      texCoord.x = mesh->mTextureCoords[0][i].x;
+      texCoord.y = mesh->mTextureCoords[0][i].y;
+      vertex.TexCoords = texCoord;
     } else {
       vertex.TexCoords = glm::vec2(0.0f, 0.0f);
     }
@@ -210,8 +204,9 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat,
   return textures;
 }
 
-unsigned int TextureFromFile(const char *path, const std::string &directory,
-                             const aiScene *scene, bool gamma) {
+static unsigned int TextureFromFile(const char *path,
+                                    const std::string &directory,
+                                    const aiScene *scene, bool gamma) {
   stbi_set_flip_vertically_on_load(true);
   unsigned int textureID;
   glGenTextures(1, &textureID);

@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include <glm/ext/matrix_float4x4.hpp>
+#include <spdlog/spdlog.h>
 
 Mesh::Mesh(std::vector<Vertex> verts, std::vector<unsigned int> inds,
            std::vector<Texture> texs)
@@ -16,12 +17,18 @@ void Mesh::setupMesh() {
   glBindVertexArray(vao);
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0],
-               GL_STATIC_DRAW);
+  if (!vertices.empty())
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
+                 vertices.data(), GL_STATIC_DRAW);
+  else
+    spdlog::warn("Mesh::setupMesh() - No vertex data found!");
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
-               &indices[0], GL_STATIC_DRAW);
+  if (!indices.empty())
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+                 indices.data(), GL_STATIC_DRAW);
+  else
+    spdlog::warn("Mesh::setupMesh() - No index data found!");
 
   // Position
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
@@ -46,7 +53,8 @@ void Mesh::setupMesh() {
   glBindVertexArray(0);
 }
 
-void Mesh::update(Shader &shader, const glm::mat4 &transform) {
+void Mesh::update(Shader &shader, const glm::mat4 &transform,
+                  const glm::vec3 &ambient, const float &shininess) {
   int diffuseNum = 0;
   int specularNum = 0;
   // Binds all the textures to their own texture units and sets the respective
@@ -65,9 +73,16 @@ void Mesh::update(Shader &shader, const glm::mat4 &transform) {
 
   glm::mat4 transformedMesh = transform * this->transform;
   shader.setMat4("u_Model", transformedMesh);
+  shader.setVec3("material.ambient", ambient);
+  shader.setFloat("material.shininess", shininess);
 }
 
 void Mesh::Draw(Shader &shader) {
+  if (indices.empty()) {
+    spdlog::warn("Mesh::Draw() - No index data found!");
+    return;
+  }
+
   // Draws the mesh
   glBindVertexArray(vao);
   glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);

@@ -19,12 +19,14 @@ public:
   std::vector<Texture> textures_loaded;
   std::vector<Mesh> meshes;
   std::string directory;
-  glm::mat4 transform;
 
   // Optionally remove this two, only used for soft body physics
   std::vector<float> flatVertices;
   std::vector<int> flatIndices;
 
+  glm::mat4 transform;
+  glm::vec3 ambient;
+  float shininess;
   bool gammaCorrection;
 
   Model(bool gamma = false);

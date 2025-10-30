@@ -91,7 +91,7 @@ function(link_all)
   target_link_libraries(Texture2D PUBLIC stb_image glad spdlog::spdlog)
   target_link_libraries(Camera PUBLIC SDL2::SDL2 glad glm::glm)
   target_link_libraries(ImGUIWindow PUBLIC SDL2::SDL2 spdlog::spdlog glad imgui Practice)
-  target_link_libraries(Mesh PUBLIC assimp::assimp glm::glm glad Shader)
+  target_link_libraries(Mesh PUBLIC assimp::assimp glm::glm glad Shader spdlog::spdlog)
   target_link_libraries(Model PUBLIC glm::glm glad stb_image assimp::assimp Mesh)
   target_link_libraries(imgui PUBLIC SDL2::SDL2)
 
