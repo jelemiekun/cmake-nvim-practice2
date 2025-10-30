@@ -13,39 +13,48 @@
 #include <spdlog/spdlog.h>
 #include <string>
 
-static Shader shaderObject;
-static Camera camera;
-static Model model;
-static glm::mat4 projection;
+Shader ProgramValues::shaderObject;
+Camera ProgramValues::camera;
+Model ProgramValues::model;
+glm::mat4 ProgramValues::projection;
+glm::vec3 ProgramValues::lightColor;
+
+static Shader *shaderObject = &ProgramValues::shaderObject;
+static Camera *camera = &ProgramValues::camera;
+static Model *model = &ProgramValues::model;
+static glm::mat4 *projection = &ProgramValues::projection;
+static glm::vec3 *lightColor = &ProgramValues::lightColor;
 
 void Practice::init() {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
 
-  shaderObject.init(
+  shaderObject->init(
       (std::string(CMAKE_SOURCE_PATH) + "/shaders/source.glsl").c_str());
-  model.loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
+  model->loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
 
   Game *game = Game::getInstance();
-  projection =
+  *projection =
       glm::perspective(glm::radians(60.0f),
                        (float)game->m_WindowWidth / (float)game->m_WindowHeight,
                        0.001f, 1000.0f);
+
+  *lightColor = glm::vec3(1.0f);
 }
 
 void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
-  camera.processKeyboard(event, window);
-  camera.processMouseMotion(event);
+  camera->processKeyboard(event, window);
+  camera->processMouseMotion(event);
 
   if (event.type == SDL_KEYDOWN) {
     switch (event.key.keysym.sym) {
     case SDLK_EQUALS:
-      model.transform =
-          glm::scale(model.transform, glm::vec3(1.5f, 1.5f, 1.5f));
+      model->transform =
+          glm::scale(model->transform, glm::vec3(1.5f, 1.5f, 1.5f));
       break;
     case SDLK_MINUS:
-      model.transform =
-          glm::scale(model.transform, glm::vec3(0.5f, 0.5f, 0.5f));
+      model->transform =
+          glm::scale(model->transform, glm::vec3(0.5f, 0.5f, 0.5f));
       break;
     }
   }
@@ -55,24 +64,24 @@ void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
 }
 
 void Practice::update(const float &deltaTime) {
-  camera.update();
+  camera->update();
 
-  shaderObject.bind();
-  model.update(shaderObject);                       // u_Model of glsl
-  shaderObject.setMat4("u_Projection", projection); // u_Projection of glsl
-  shaderObject.setMat4("u_View", camera.getViewMatrix());
+  shaderObject->bind();
+  model->update(*shaderObject);                       // u_Model of glsl
+  shaderObject->setMat4("u_Projection", *projection); // u_Projection of glsl
+  shaderObject->setMat4("u_View", camera->getViewMatrix());
 
-  shaderObject.setVec3("u_LightColor", glm::vec3(0.5f, 0.3f, 1.0f));
-  shaderObject.unbind();
+  shaderObject->setVec3("u_LightColor", *lightColor);
+  shaderObject->unbind();
   //
   //
   //
 }
 
 void Practice::render() {
-  shaderObject.bind();
-  model.Draw(shaderObject);
-  shaderObject.unbind();
+  shaderObject->bind();
+  model->Draw(*shaderObject);
+  shaderObject->unbind();
   //
   //
 }

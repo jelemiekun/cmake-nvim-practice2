@@ -1,4 +1,5 @@
 #include "ImGUIWindow.h"
+#include "Practice.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "imgui.h"
@@ -72,8 +73,13 @@ void ImGUIWindow::render() {
 
   // Your GUI code
   static bool showExtraInfo = false;
-  ImGui::Begin("My Window");
-  ImGui::Text("Hello, world!");
+  ImGui::Begin("Light");
+  ImGui::SeparatorText("Color");
+  {
+    ImGui::SliderFloat("r:", &ProgramValues::lightColor.r, 0.0f, 1.0f, "%.2f");
+    ImGui::SliderFloat("g:", &ProgramValues::lightColor.g, 0.0f, 1.0f, "%.2f");
+    ImGui::SliderFloat("b:", &ProgramValues::lightColor.b, 0.0f, 1.0f, "%.2f");
+  }
   ImGui::End();
 
   ImGui::Render();
