@@ -86,6 +86,13 @@ void ImGUIWindow::render() {
                        0.0f, 1.0f, "%.2f");
   }
   {
+    ImGui::SeparatorText("Specular");
+    ImGui::SliderFloat("specularStrength:", &ProgramValues::specularStrength,
+                       0.0f, 1.0f, "%.2f");
+    ImGui::SliderFloat("specularShininess:", &ProgramValues::specularShininess,
+                       0.0f, 256.0f, "%.2f");
+  }
+  {
     ImGui::SeparatorText("Light Position");
     ImGui::DragFloat("_X", &ProgramValues::lightPos.r, 0.05f);
     ImGui::DragFloat("_Y", &ProgramValues::lightPos.g, 0.05f);

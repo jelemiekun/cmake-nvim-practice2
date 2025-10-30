@@ -37,8 +37,11 @@ in vec3 v_FragPos;
 uniform Material material;
 
 uniform vec3 u_LightColor;
-uniform float u_AmbientStrength;
 uniform vec3 u_LightPos;
+uniform vec3 u_ViewPos;
+uniform float u_AmbientStrength;
+uniform float u_SpecularStrength;
+uniform float u_SpecularShininess;
 
 out vec4 FragColor;
 
@@ -60,9 +63,22 @@ vec3 getDiffuse() {
     return diffuse;
 }
 
+vec3 getSpecular() {
+    vec3 viewDir = normalize(u_ViewPos - v_FragPos);
+    vec3 norm = normalize(v_Normal);
+    vec3 lightDir = normalize(u_LightPos - v_FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);
+
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), u_SpecularShininess);
+
+    vec3 specular = u_SpecularStrength * spec * u_LightColor;
+
+    return specular;
+}
+
 void main() {
     vec4 modelColor = getModelColor();
-    vec4 phong = vec4(getAmbient() + getDiffuse(), 1.0f);
+    vec4 phong = vec4(getAmbient() + getDiffuse() + getSpecular(), 1.0f);
 
     vec4 result = modelColor * phong;
     FragColor = result;

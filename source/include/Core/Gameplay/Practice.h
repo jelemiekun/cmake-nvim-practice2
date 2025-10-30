@@ -13,8 +13,11 @@ extern Model model;
 extern glm::mat4 projection;
 
 extern glm::vec3 lightColor;
-extern float ambientStrength;
 extern glm::vec3 lightPos;
+
+extern float ambientStrength;
+extern float specularStrength;
+extern float specularShininess;
 } // namespace ProgramValues
 
 namespace Practice {

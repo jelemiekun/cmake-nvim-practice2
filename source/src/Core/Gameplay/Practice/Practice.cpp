@@ -19,6 +19,8 @@ Model ProgramValues::model;
 glm::mat4 ProgramValues::projection;
 glm::vec3 ProgramValues::lightColor;
 float ProgramValues::ambientStrength = 0.2f;
+float ProgramValues::specularStrength = 1.0f;
+float ProgramValues::specularShininess = 36;
 glm::vec3 ProgramValues::lightPos(0.0f, 10.0f, 0.0f);
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
@@ -27,6 +29,8 @@ static Model *model = &ProgramValues::model;
 static glm::mat4 *projection = &ProgramValues::projection;
 static glm::vec3 *lightColor = &ProgramValues::lightColor;
 static float *ambientStrength = &ProgramValues::ambientStrength;
+static float *specularStrength = &ProgramValues::specularStrength;
+static float *specularShininess = &ProgramValues::specularShininess;
 static glm::vec3 *lightPos = &ProgramValues::lightPos;
 
 void Practice::init() {
@@ -68,13 +72,20 @@ void Practice::update(const float &deltaTime) {
   camera->update();
 
   shaderObject->bind();
-  model->update(*shaderObject);                       // u_Model of glsl
+  model->update(*shaderObject); // u_Model of glsl
+  // 3D Matrices
   shaderObject->setMat4("u_Projection", *projection); // u_Projection of glsl
   shaderObject->setMat4("u_View", camera->getViewMatrix());
 
+  // General Light Property
   shaderObject->setVec3("u_LightColor", *lightColor);
-  shaderObject->setFloat("u_AmbientStrength", *ambientStrength);
   shaderObject->setVec3("u_LightPos", *lightPos);
+  shaderObject->setVec3("u_ViewPos", camera->position);
+
+  shaderObject->setFloat("u_AmbientStrength", *ambientStrength);
+  shaderObject->setFloat("u_SpecularStrength", *specularStrength);
+  shaderObject->setFloat("u_SpecularShininess", *specularShininess);
+
   shaderObject->unbind();
 }
 
