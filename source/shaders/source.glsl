@@ -32,13 +32,20 @@ in vec3 v_Normal;
 in vec2 v_TexCoord;
 
 uniform Material material;
+uniform vec3 u_LightColor;
 
 out vec4 FragColor;
 
-void main() {
+vec4 getModelColor() {
     vec4 diffuseColor = texture(material.texture_diffuse1, v_TexCoord);
     vec4 specularColor = texture(material.texture_specular1, v_TexCoord);
 
-    // Example: just output the diffuse texture for simplicity
-    FragColor = diffuseColor;
+    return diffuseColor * specularColor;
+}
+
+void main() {
+    vec4 modelColor = getModelColor();
+
+    vec4 result = modelColor * vec4(u_LightColor, 1.0f);
+    FragColor = result;
 }

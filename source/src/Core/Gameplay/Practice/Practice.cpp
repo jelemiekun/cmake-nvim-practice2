@@ -8,6 +8,7 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/vector_float3.hpp>
 #include <glm/trigonometric.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -60,6 +61,8 @@ void Practice::update(const float &deltaTime) {
   model.update(shaderObject);                       // u_Model of glsl
   shaderObject.setMat4("u_Projection", projection); // u_Projection of glsl
   shaderObject.setMat4("u_View", camera.getViewMatrix());
+
+  shaderObject.setVec3("u_LightColor", glm::vec3(0.5f, 0.3f, 1.0f));
   shaderObject.unbind();
   //
   //
