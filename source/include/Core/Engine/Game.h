@@ -2,6 +2,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_video.h>
 
+class ImGUIWindow;
+
 class Game {
   // Constructors & Destructors
 public:
@@ -19,6 +21,7 @@ public:
   // Class Private Attributes
   SDL_Window *m_Window;
   SDL_GLContext m_GLContext;
+  ImGUIWindow *imgui;
   bool m_Running;
   float deltaTime;
   int m_WindowWidth;
@@ -36,6 +39,7 @@ private:
   bool initWindow();
   bool initOpenGLContext();
   bool loadGLAD();
+  bool initImGUIWindow();
   void initGLViewPort();
 
   // Game Loop

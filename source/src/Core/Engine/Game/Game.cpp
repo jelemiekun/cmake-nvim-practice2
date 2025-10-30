@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Camera.h"
+#include "ImGUIWindow.h"
 #include "Practice.h"
+#include "backends/imgui_impl_sdl2.h"
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
 #include <SDL_video.h>
@@ -8,7 +10,7 @@
 #include <spdlog/spdlog.h>
 
 // Constructors and Destructors
-Game::Game() : m_Window(nullptr) {
+Game::Game() : m_Window(nullptr), imgui(nullptr) {
   spdlog::info("[Game::Game]: An instance of Game class has created.");
 }
 
@@ -28,7 +30,8 @@ void Game::run() {
 
   setOpenGLAttributes();
 
-  m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD();
+  m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD() &&
+              initImGUIWindow();
 
   if (m_Running) {
     spdlog::info("Initializing openGL Viewport...");
@@ -115,6 +118,11 @@ bool Game::loadGLAD() {
   return true;
 }
 
+bool Game::initImGUIWindow() {
+  imgui = ImGUIWindow::getInstance();
+  return imgui->init(m_Window, m_GLContext);
+}
+
 void Game::initGLViewPort() { glViewport(0, 0, m_WindowWidth, m_WindowHeight); }
 
 void Game::gameLoop() {
@@ -129,6 +137,7 @@ void Game::gameLoop() {
 void Game::handleInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
+    ImGui_ImplSDL2_ProcessEvent(&event);
     if (event.type == SDL_QUIT)
       m_Running = false;
     if (event.type == SDL_WINDOWEVENT &&
@@ -153,6 +162,7 @@ void Game::render() {
 
   Practice::render();
 
+  imgui->render();
   SDL_GL_SwapWindow(m_Window);
 }
 
