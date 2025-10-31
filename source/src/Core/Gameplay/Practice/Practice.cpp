@@ -17,14 +17,14 @@ namespace ProgramValues {
 Shader shaderObject;
 Camera camera;
 Model model;
-Light light;
+DirLight dirLight;
 glm::mat4 projection;
 } // namespace ProgramValues
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
 static Camera *camera = &ProgramValues::camera;
 static Model *model = &ProgramValues::model;
-static ProgramValues::Light *light = &ProgramValues::light;
+static ProgramValues::DirLight *dirLight = &ProgramValues::dirLight;
 static glm::mat4 *projection = &ProgramValues::projection;
 
 void Practice::init() {
@@ -38,10 +38,10 @@ void Practice::init() {
         (std::string(CMAKE_SOURCE_PATH) + "/shaders/source.glsl").c_str());
     model->loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
 
-    light->ambient = glm::vec3(0.2f);
-    light->diffuse = glm::vec3(0.45f);
-    light->specular = glm::vec3(0.57f);
-    light->position = glm::vec3(0.0f, 5.0f, 0.0f);
+    dirLight->direction = glm::vec3(0.0f, 5.0f, 0.0f);
+    dirLight->ambient = glm::vec3(0.2f);
+    dirLight->diffuse = glm::vec3(0.45f);
+    dirLight->specular = glm::vec3(0.57f);
 
     *projection = glm::perspective(glm::radians(60.0f),
                                    (float)game->m_WindowWidth /
@@ -78,10 +78,10 @@ void Practice::update(const float &deltaTime) {
   shaderObject->setMat4("u_View", camera->getViewMatrix());
 
   // General Light Property
-  shaderObject->setVec3("light.position", light->position);
-  shaderObject->setVec3("light.ambient", light->ambient);
-  shaderObject->setVec3("light.diffuse", light->diffuse);
-  shaderObject->setVec3("light.specular", light->specular);
+  shaderObject->setVec3("dirLight.direction", dirLight->direction);
+  shaderObject->setVec3("dirLight.ambient", dirLight->ambient);
+  shaderObject->setVec3("dirLight.diffuse", dirLight->diffuse);
+  shaderObject->setVec3("dirLight.specular", dirLight->specular);
 
   shaderObject->setVec3("u_ViewPos", camera->position);
 

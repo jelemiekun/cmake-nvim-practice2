@@ -76,37 +76,37 @@ void ImGUIWindow::render() {
   static bool showExtraInfo = false;
   ImGui::Begin("Light");
   { // Position
-    ImGui::SeparatorText("Light Position");
-    ImGui::DragFloat("_X", &ProgramValues::light.position.r, 0.05f);
-    ImGui::DragFloat("_Y", &ProgramValues::light.position.g, 0.05f);
-    ImGui::DragFloat("_Z", &ProgramValues::light.position.b, 0.05f);
+    ImGui::SeparatorText("Light Direction");
+    ImGui::DragFloat("_X", &ProgramValues::dirLight.direction.r, 0.05f);
+    ImGui::DragFloat("_Y", &ProgramValues::dirLight.direction.g, 0.05f);
+    ImGui::DragFloat("_Z", &ProgramValues::dirLight.direction.b, 0.05f);
   }
   { // Ambient
     ImGui::SeparatorText("Ambient");
-    static float a_value = ProgramValues::light.ambient.r;
+    static float a_value = ProgramValues::dirLight.ambient.r;
     ImGui::SliderFloat("Ambient Value", &a_value, 0.0f, 1.0f, "%.2f");
 
-    ProgramValues::light.ambient.r = a_value;
-    ProgramValues::light.ambient.g = a_value;
-    ProgramValues::light.ambient.b = a_value;
+    ProgramValues::dirLight.ambient.r = a_value;
+    ProgramValues::dirLight.ambient.g = a_value;
+    ProgramValues::dirLight.ambient.b = a_value;
   }
   { // Diffuse
     ImGui::SeparatorText("Diffuse");
-    static float d_value = ProgramValues::light.diffuse.r;
+    static float d_value = ProgramValues::dirLight.diffuse.r;
     ImGui::SliderFloat("Diffuse Value", &d_value, 0.0f, 1.0f, "%.2f");
 
-    ProgramValues::light.diffuse.r = d_value;
-    ProgramValues::light.diffuse.g = d_value;
-    ProgramValues::light.diffuse.b = d_value;
+    ProgramValues::dirLight.diffuse.r = d_value;
+    ProgramValues::dirLight.diffuse.g = d_value;
+    ProgramValues::dirLight.diffuse.b = d_value;
   }
   { // Specular
     ImGui::SeparatorText("Specular");
-    static float s_value = ProgramValues::light.specular.r;
+    static float s_value = ProgramValues::dirLight.specular.r;
     ImGui::SliderFloat("Specular Value", &s_value, 0.0f, 1.0f, "%.2f");
 
-    ProgramValues::light.specular.r = s_value;
-    ProgramValues::light.specular.g = s_value;
-    ProgramValues::light.specular.b = s_value;
+    ProgramValues::dirLight.specular.r = s_value;
+    ProgramValues::dirLight.specular.g = s_value;
+    ProgramValues::dirLight.specular.b = s_value;
   }
   ImGui::End();
 

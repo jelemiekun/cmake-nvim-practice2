@@ -7,8 +7,8 @@ class Camera;
 class Model;
 
 namespace ProgramValues {
-struct Light {
-  glm::vec3 position;
+struct DirLight {
+  glm::vec3 direction;
   glm::vec3 ambient;
   glm::vec3 diffuse;
   glm::vec3 specular;
@@ -17,7 +17,7 @@ struct Light {
 extern Shader shaderObject;
 extern Camera camera;
 extern Model model;
-extern Light light;
+extern DirLight dirLight;
 extern glm::mat4 projection;
 } // namespace ProgramValues
 

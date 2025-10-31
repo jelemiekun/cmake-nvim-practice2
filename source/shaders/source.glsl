@@ -32,8 +32,8 @@ struct Material {
     float shininess;
 };
 
-struct Light {
-    vec3 position;
+struct DirLight {
+    vec3 direction;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -44,45 +44,38 @@ in vec2 v_TexCoord;
 in vec3 v_FragPos;
 
 uniform Material material;
-uniform Light light;
+uniform DirLight dirLight;
 
 uniform vec3 u_ViewPos;
 
 out vec4 FragColor;
 
-vec3 getAmbient() {
-    return material.ambient * light.ambient;
-}
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
+    // Ambient Lighting
+    vec3 diffTexColor = vec3(texture(material.texture_diffuse1, v_TexCoord));
+    vec3 ambient = light.ambient * diffTexColor;
 
-vec3 getDiffuse() {
-    vec3 texColor = vec3(texture(material.texture_diffuse1, v_TexCoord));
+    // Diffuse Lighting
+    vec3 lightDir = normalize(-light.direction);
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 diffuse = light.diffuse * diff * diffTexColor;
 
-    vec3 norm = normalize(v_Normal);
-    vec3 lightDir = normalize(light.position - v_FragPos);
-
-    float diff = max(dot(norm, lightDir), 0.0);
-
-    vec3 diffuse = light.diffuse * diff * texColor;
-    return diffuse;
-}
-
-vec3 getSpecular() {
-    vec3 texColor = vec3(texture(material.texture_specular1, v_TexCoord));
-
-    vec3 viewDir = normalize(u_ViewPos - v_FragPos);
-    vec3 norm = normalize(v_Normal);
-    vec3 lightDir = normalize(light.position - v_FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-
+    // Specular Lighting
+    vec3 specTexColor = vec3(texture(material.texture_specular1, v_TexCoord));
+    vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    vec3 specular = light.specular * spec * specTexColor;
 
-    vec3 specular = light.specular * spec * texColor;
-
-    return specular;
+    return ambient + diffuse + specular;
 }
 
 void main() {
-    vec3 phong = getAmbient() + getDiffuse() + getSpecular();
+    vec3 norm = normalize(v_Normal);
+    vec3 viewDir = normalize(u_ViewPos - v_FragPos);
 
-    FragColor = vec4(phong, 1.0f);
+    vec3 result = vec3(0.0f);
+
+    result += CalcDirLight(dirLight, norm, viewDir);
+
+    FragColor = vec4(result, 1.0f);
 }
