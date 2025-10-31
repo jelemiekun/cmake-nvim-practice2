@@ -75,38 +75,94 @@ void ImGUIWindow::render() {
   // Your GUI code
   static bool showExtraInfo = false;
   ImGui::Begin("Light");
-  { // Position
+  { // Direction
     ImGui::SeparatorText("Light Direction");
-    ImGui::DragFloat("_X", &ProgramValues::dirLight.direction.r, 0.05f);
-    ImGui::DragFloat("_Y", &ProgramValues::dirLight.direction.g, 0.05f);
-    ImGui::DragFloat("_Z", &ProgramValues::dirLight.direction.b, 0.05f);
+    ImGui::DragFloat("Light Direction X", &ProgramValues::dirLight.direction.r,
+                     0.05f);
+    ImGui::DragFloat("Light Direction Y", &ProgramValues::dirLight.direction.g,
+                     0.05f);
+    ImGui::DragFloat("Light Direction Z", &ProgramValues::dirLight.direction.b,
+                     0.05f);
   }
   { // Ambient
-    ImGui::SeparatorText("Ambient");
+    ImGui::SeparatorText("Light Direction Ambient");
     static float a_value = ProgramValues::dirLight.ambient.r;
-    ImGui::SliderFloat("Ambient Value", &a_value, 0.0f, 1.0f, "%.2f");
+    ImGui::SliderFloat("Light Direction Ambient Value", &a_value, 0.0f, 1.0f,
+                       "%.2f");
 
     ProgramValues::dirLight.ambient.r = a_value;
     ProgramValues::dirLight.ambient.g = a_value;
     ProgramValues::dirLight.ambient.b = a_value;
   }
   { // Diffuse
-    ImGui::SeparatorText("Diffuse");
+    ImGui::SeparatorText("Light Direction Diffuse");
     static float d_value = ProgramValues::dirLight.diffuse.r;
-    ImGui::SliderFloat("Diffuse Value", &d_value, 0.0f, 1.0f, "%.2f");
+    ImGui::SliderFloat("Light Direction Diffuse Value", &d_value, 0.0f, 1.0f,
+                       "%.2f");
 
     ProgramValues::dirLight.diffuse.r = d_value;
     ProgramValues::dirLight.diffuse.g = d_value;
     ProgramValues::dirLight.diffuse.b = d_value;
   }
   { // Specular
-    ImGui::SeparatorText("Specular");
+    ImGui::SeparatorText("Light Direction Specular");
     static float s_value = ProgramValues::dirLight.specular.r;
-    ImGui::SliderFloat("Specular Value", &s_value, 0.0f, 1.0f, "%.2f");
+    ImGui::SliderFloat("Light Direction Specular Value", &s_value, 0.0f, 1.0f,
+                       "%.2f");
 
     ProgramValues::dirLight.specular.r = s_value;
     ProgramValues::dirLight.specular.g = s_value;
     ProgramValues::dirLight.specular.b = s_value;
+  }
+
+  { // Position
+    ImGui::SeparatorText("Light Position");
+    ImGui::DragFloat("Light Point Position X",
+                     &ProgramValues::pointLight.position.r, 0.05f);
+    ImGui::DragFloat("Light Point Position Y",
+                     &ProgramValues::pointLight.position.g, 0.05f);
+    ImGui::DragFloat("Light Point Position Z",
+                     &ProgramValues::pointLight.position.b, 0.05f);
+  }
+  { // Configurable terms
+    ImGui::DragFloat("Light Point Constant",
+                     &ProgramValues::pointLight.constant, 1.0f, 1.0f, 1.0f,
+                     "%.1f");
+    ImGui::DragFloat("Light Point Linear", &ProgramValues::pointLight.linear,
+                     0.0005f, 0.0001f, 1.0f, "%.4f");
+    ImGui::DragFloat("Light Point Quadratic",
+                     &ProgramValues::pointLight.quadratic, 0.0005f, 0.0001f,
+                     1.0f, "%.4f");
+  }
+  { // Ambient
+    ImGui::SeparatorText("Light Point Ambient");
+    static float a_value = ProgramValues::pointLight.ambient.r;
+    ImGui::SliderFloat("Light Point Ambient Value", &a_value, 0.0f, 1.0f,
+                       "%.2f");
+
+    ProgramValues::pointLight.ambient.r = a_value;
+    ProgramValues::pointLight.ambient.g = a_value;
+    ProgramValues::pointLight.ambient.b = a_value;
+  }
+  { // Diffuse
+    ImGui::SeparatorText("Light Point Diffuse");
+    static float d_value = ProgramValues::pointLight.diffuse.r;
+    ImGui::SliderFloat("Light Point Diffuse Value", &d_value, 0.0f, 1.0f,
+                       "%.2f");
+
+    ProgramValues::pointLight.diffuse.r = d_value;
+    ProgramValues::pointLight.diffuse.g = d_value;
+    ProgramValues::pointLight.diffuse.b = d_value;
+  }
+  { // Specular
+    ImGui::SeparatorText("Light Point Specular");
+    static float s_value = ProgramValues::pointLight.specular.r;
+    ImGui::SliderFloat("Light Point Specular Value", &s_value, 0.0f, 1.0f,
+                       "%.2f");
+
+    ProgramValues::pointLight.specular.r = s_value;
+    ProgramValues::pointLight.specular.g = s_value;
+    ProgramValues::pointLight.specular.b = s_value;
   }
   ImGui::End();
 

@@ -18,6 +18,7 @@ Shader shaderObject;
 Camera camera;
 Model model;
 DirLight dirLight;
+PointLight pointLight;
 glm::mat4 projection;
 } // namespace ProgramValues
 
@@ -25,6 +26,7 @@ static Shader *shaderObject = &ProgramValues::shaderObject;
 static Camera *camera = &ProgramValues::camera;
 static Model *model = &ProgramValues::model;
 static ProgramValues::DirLight *dirLight = &ProgramValues::dirLight;
+static ProgramValues::PointLight *pointLight = &ProgramValues::pointLight;
 static glm::mat4 *projection = &ProgramValues::projection;
 
 void Practice::init() {
@@ -38,10 +40,18 @@ void Practice::init() {
         (std::string(CMAKE_SOURCE_PATH) + "/shaders/source.glsl").c_str());
     model->loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
 
-    dirLight->direction = glm::vec3(0.0f, 5.0f, 0.0f);
+    dirLight->direction = glm::vec3(0.0f, -5.0f, 0.0f);
     dirLight->ambient = glm::vec3(0.2f);
     dirLight->diffuse = glm::vec3(0.45f);
     dirLight->specular = glm::vec3(0.57f);
+
+    pointLight->position = glm::vec3(7.0f, -8.0f, 0.0f);
+    pointLight->constant = 1.0f;
+    pointLight->linear = 0.35f;
+    pointLight->quadratic = 0.44f;
+    pointLight->ambient = glm::vec3(0.2f);
+    pointLight->diffuse = glm::vec3(0.45f);
+    pointLight->specular = glm::vec3(0.57f);
 
     *projection = glm::perspective(glm::radians(60.0f),
                                    (float)game->m_WindowWidth /
@@ -78,10 +88,19 @@ void Practice::update(const float &deltaTime) {
   shaderObject->setMat4("u_View", camera->getViewMatrix());
 
   // General Light Property
+  // DirLight
   shaderObject->setVec3("dirLight.direction", dirLight->direction);
   shaderObject->setVec3("dirLight.ambient", dirLight->ambient);
   shaderObject->setVec3("dirLight.diffuse", dirLight->diffuse);
   shaderObject->setVec3("dirLight.specular", dirLight->specular);
+  // Point Light
+  shaderObject->setVec3("pointLight.position", pointLight->position);
+  shaderObject->setFloat("pointLight.constant", pointLight->constant);
+  shaderObject->setFloat("pointLight.linear", pointLight->linear);
+  shaderObject->setFloat("pointLight.quadratic", pointLight->quadratic);
+  shaderObject->setVec3("pointLight.ambient", pointLight->ambient);
+  shaderObject->setVec3("pointLight.diffuse", pointLight->diffuse);
+  shaderObject->setVec3("pointLight.specular", pointLight->specular);
 
   shaderObject->setVec3("u_ViewPos", camera->position);
 
