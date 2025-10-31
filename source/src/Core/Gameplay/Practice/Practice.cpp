@@ -13,29 +13,41 @@
 #include <spdlog/spdlog.h>
 #include <string>
 
-Shader ProgramValues::shaderObject;
-Camera ProgramValues::camera;
-Model ProgramValues::model;
-glm::mat4 ProgramValues::projection;
+namespace ProgramValues {
+Shader shaderObject;
+Camera camera;
+Model model;
+Light light;
+glm::mat4 projection;
+} // namespace ProgramValues
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
 static Camera *camera = &ProgramValues::camera;
 static Model *model = &ProgramValues::model;
+static ProgramValues::Light *light = &ProgramValues::light;
 static glm::mat4 *projection = &ProgramValues::projection;
 
 void Practice::init() {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
 
-  shaderObject->init(
-      (std::string(CMAKE_SOURCE_PATH) + "/shaders/source.glsl").c_str());
-  model->loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
+  { // ProgramValues
+    Game *game = Game::getInstance();
 
-  Game *game = Game::getInstance();
-  *projection =
-      glm::perspective(glm::radians(60.0f),
-                       (float)game->m_WindowWidth / (float)game->m_WindowHeight,
-                       0.001f, 1000.0f);
+    shaderObject->init(
+        (std::string(CMAKE_SOURCE_PATH) + "/shaders/source.glsl").c_str());
+    model->loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
+
+    light->ambient = glm::vec3(0.2f);
+    light->diffuse = glm::vec3(0.45f);
+    light->specular = glm::vec3(0.57f);
+    light->position = glm::vec3(0.0f, 5.0f, 0.0f);
+
+    *projection = glm::perspective(glm::radians(60.0f),
+                                   (float)game->m_WindowWidth /
+                                       (float)game->m_WindowHeight,
+                                   0.001f, 1000.0f);
+  }
 }
 
 void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
@@ -66,7 +78,10 @@ void Practice::update(const float &deltaTime) {
   shaderObject->setMat4("u_View", camera->getViewMatrix());
 
   // General Light Property
-  // TODO: light position, ambient, diffuse, and specular
+  shaderObject->setVec3("light.position", light->position);
+  shaderObject->setVec3("light.ambient", light->ambient);
+  shaderObject->setVec3("light.diffuse", light->diffuse);
+  shaderObject->setVec3("light.specular", light->specular);
 
   shaderObject->setVec3("u_ViewPos", camera->position);
 

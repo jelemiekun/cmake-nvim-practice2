@@ -7,17 +7,18 @@ class Camera;
 class Model;
 
 namespace ProgramValues {
+struct Light {
+  glm::vec3 position;
+  glm::vec3 ambient;
+  glm::vec3 diffuse;
+  glm::vec3 specular;
+};
+
 extern Shader shaderObject;
 extern Camera camera;
 extern Model model;
+extern Light light;
 extern glm::mat4 projection;
-
-extern glm::vec3 lightColor;
-extern glm::vec3 lightPos;
-
-extern float ambientStrength;
-extern float specularStrength;
-extern float specularShininess;
 } // namespace ProgramValues
 
 namespace Practice {

@@ -1,4 +1,5 @@
 #include "ImGUIWindow.h"
+#include "Model.h"
 #include "Practice.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_sdl2.h"
@@ -74,29 +75,53 @@ void ImGUIWindow::render() {
   // Your GUI code
   static bool showExtraInfo = false;
   ImGui::Begin("Light");
-  {
-    ImGui::SeparatorText("Color");
-    ImGui::SliderFloat("r:", &ProgramValues::lightColor.r, 0.0f, 1.0f, "%.2f");
-    ImGui::SliderFloat("g:", &ProgramValues::lightColor.g, 0.0f, 1.0f, "%.2f");
-    ImGui::SliderFloat("b:", &ProgramValues::lightColor.b, 0.0f, 1.0f, "%.2f");
-  }
-  {
-    ImGui::SeparatorText("Ambient");
-    ImGui::SliderFloat("ambientStrength:", &ProgramValues::ambientStrength,
-                       0.0f, 1.0f, "%.2f");
-  }
-  {
-    ImGui::SeparatorText("Specular");
-    ImGui::SliderFloat("specularStrength:", &ProgramValues::specularStrength,
-                       0.0f, 1.0f, "%.2f");
-    ImGui::SliderFloat("specularShininess:", &ProgramValues::specularShininess,
-                       0.0f, 256.0f, "%.2f");
-  }
-  {
+  { // Position
     ImGui::SeparatorText("Light Position");
-    ImGui::DragFloat("_X", &ProgramValues::lightPos.r, 0.05f);
-    ImGui::DragFloat("_Y", &ProgramValues::lightPos.g, 0.05f);
-    ImGui::DragFloat("_Z", &ProgramValues::lightPos.b, 0.05f);
+    ImGui::DragFloat("_X", &ProgramValues::light.position.r, 0.05f);
+    ImGui::DragFloat("_Y", &ProgramValues::light.position.g, 0.05f);
+    ImGui::DragFloat("_Z", &ProgramValues::light.position.b, 0.05f);
+  }
+  { // Ambient
+    ImGui::SeparatorText("Ambient");
+    static float a_value = ProgramValues::light.ambient.r;
+    ImGui::SliderFloat("Ambient Value", &a_value, 0.0f, 1.0f, "%.2f");
+
+    ProgramValues::light.ambient.r = a_value;
+    ProgramValues::light.ambient.g = a_value;
+    ProgramValues::light.ambient.b = a_value;
+  }
+  { // Diffuse
+    ImGui::SeparatorText("Diffuse");
+    static float d_value = ProgramValues::light.diffuse.r;
+    ImGui::SliderFloat("Diffuse Value", &d_value, 0.0f, 1.0f, "%.2f");
+
+    ProgramValues::light.diffuse.r = d_value;
+    ProgramValues::light.diffuse.g = d_value;
+    ProgramValues::light.diffuse.b = d_value;
+  }
+  { // Specular
+    ImGui::SeparatorText("Specular");
+    static float s_value = ProgramValues::light.specular.r;
+    ImGui::SliderFloat("Specular Value", &s_value, 0.0f, 1.0f, "%.2f");
+
+    ProgramValues::light.specular.r = s_value;
+    ProgramValues::light.specular.g = s_value;
+    ProgramValues::light.specular.b = s_value;
+  }
+  ImGui::End();
+
+  ImGui::Begin("Object");
+  {
+    ImGui::SeparatorText("Properties");
+    static float m_a_value = ProgramValues::model.ambient.r;
+    ImGui::SliderFloat("Material Ambient Value", &m_a_value, 0.0f, 1.0f,
+                       "%.2f");
+    ImGui::DragFloat("Shininess", &ProgramValues::model.shininess, 1.0f, 1.0f,
+                     256.0f, "%.1f");
+
+    ProgramValues::model.ambient.r = m_a_value;
+    ProgramValues::model.ambient.g = m_a_value;
+    ProgramValues::model.ambient.b = m_a_value;
   }
   ImGui::End();
 

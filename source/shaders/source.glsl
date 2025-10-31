@@ -55,16 +55,20 @@ vec3 getAmbient() {
 }
 
 vec3 getDiffuse() {
+    vec3 texColor = vec3(texture(material.texture_diffuse1, v_TexCoord));
+
     vec3 norm = normalize(v_Normal);
     vec3 lightDir = normalize(light.position - v_FragPos);
 
     float diff = max(dot(norm, lightDir), 0.0);
 
-    vec3 diffuse = light.diffuse * diff * material.texture_diffuse1;
+    vec3 diffuse = light.diffuse * diff * texColor;
     return diffuse;
 }
 
 vec3 getSpecular() {
+    vec3 texColor = vec3(texture(material.texture_specular1, v_TexCoord));
+
     vec3 viewDir = normalize(u_ViewPos - v_FragPos);
     vec3 norm = normalize(v_Normal);
     vec3 lightDir = normalize(light.position - v_FragPos);
@@ -72,7 +76,7 @@ vec3 getSpecular() {
 
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 
-    vec3 specular = light.specular * spec * material.texture_specular1;
+    vec3 specular = light.specular * spec * texColor;
 
     return specular;
 }
