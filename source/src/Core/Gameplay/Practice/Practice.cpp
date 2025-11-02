@@ -72,6 +72,9 @@ void Practice::init() {
     spotLight->ambient = glm::vec3(0.3f);
     spotLight->diffuse = glm::vec3(0.65f);
     spotLight->specular = glm::vec3(0.87f);
+    spotLight->constant = 1.0f;
+    spotLight->linear = 0.35f;
+    spotLight->quadratic = 0.44f;
 
     *projection = glm::perspective(glm::radians(60.0f),
                                    (float)game->m_WindowWidth /
@@ -128,6 +131,9 @@ void Practice::update(const float &deltaTime) {
   shaderObject->setVec3("spotLight.ambient", spotLight->ambient);
   shaderObject->setVec3("spotLight.diffuse", spotLight->diffuse);
   shaderObject->setVec3("spotLight.specular", spotLight->specular);
+  shaderObject->setFloat("spotLight.constant", spotLight->constant);
+  shaderObject->setFloat("spotLight.linear", spotLight->linear);
+  shaderObject->setFloat("spotLight.quadratic", spotLight->quadratic);
 
   // Camera
   shaderObject->setVec3("u_ViewPos", camera->position);
