@@ -164,6 +164,11 @@ void ImGUIWindow::render() {
     ProgramValues::pointLight.specular.g = s_value;
     ProgramValues::pointLight.specular.b = s_value;
   }
+  { // Spot Light
+    ImGui::SeparatorText("Spot Light Cutoff");
+    ImGui::SliderFloat("Spot Light Cutoff Value",
+                       &ProgramValues::spotLight.cutoff, 0.0f, 360.0f, "%.0f");
+  }
   ImGui::End();
 
   ImGui::Begin("Object");

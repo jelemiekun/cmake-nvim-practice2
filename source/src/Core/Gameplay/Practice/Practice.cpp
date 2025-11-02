@@ -21,6 +21,7 @@ Model model;
 Model bulb;
 DirLight dirLight;
 PointLight pointLight;
+SpotLight spotLight;
 glm::mat4 projection;
 } // namespace ProgramValues
 
@@ -31,6 +32,7 @@ static Model *model = &ProgramValues::model;
 static Model *bulb = &ProgramValues::bulb;
 static ProgramValues::DirLight *dirLight = &ProgramValues::dirLight;
 static ProgramValues::PointLight *pointLight = &ProgramValues::pointLight;
+static ProgramValues::SpotLight *spotLight = &ProgramValues::spotLight;
 static glm::mat4 *projection = &ProgramValues::projection;
 
 void Practice::init() {
@@ -65,6 +67,11 @@ void Practice::init() {
     pointLight->ambient = glm::vec3(0.2f);
     pointLight->diffuse = glm::vec3(0.45f);
     pointLight->specular = glm::vec3(0.57f);
+
+    spotLight->cutoff = glm::cos(glm::radians(12.5));
+    spotLight->ambient = glm::vec3(0.3f);
+    spotLight->diffuse = glm::vec3(0.65f);
+    spotLight->specular = glm::vec3(0.87f);
 
     *projection = glm::perspective(glm::radians(60.0f),
                                    (float)game->m_WindowWidth /
@@ -113,7 +120,16 @@ void Practice::update(const float &deltaTime) {
   shaderObject->setVec3("pointLight.ambient", pointLight->ambient);
   shaderObject->setVec3("pointLight.diffuse", pointLight->diffuse);
   shaderObject->setVec3("pointLight.specular", pointLight->specular);
+  // Spot Light
+  shaderObject->setVec3("spotLight.position", camera->position);
+  shaderObject->setVec3("spotLight.direction", camera->front);
+  shaderObject->setFloat("spotLight.cutoff",
+                         glm::cos(glm::radians(spotLight->cutoff)));
+  shaderObject->setVec3("spotLight.ambient", spotLight->ambient);
+  shaderObject->setVec3("spotLight.diffuse", spotLight->diffuse);
+  shaderObject->setVec3("spotLight.specular", spotLight->specular);
 
+  // Camera
   shaderObject->setVec3("u_ViewPos", camera->position);
 
   shaderObject->unbind();

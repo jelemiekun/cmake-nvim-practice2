@@ -24,6 +24,13 @@ struct PointLight {
   glm::vec3 specular;
 };
 
+struct SpotLight {
+  float cutoff;
+  glm::vec3 ambient;
+  glm::vec3 diffuse;
+  glm::vec3 specular;
+};
+
 extern Shader shaderObject;
 extern Shader shaderLight;
 extern Camera camera;
@@ -31,6 +38,7 @@ extern Model model;
 extern Model bulb;
 extern DirLight dirLight;
 extern PointLight pointLight;
+extern SpotLight spotLight;
 extern glm::mat4 projection;
 } // namespace ProgramValues
 
