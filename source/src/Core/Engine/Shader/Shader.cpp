@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "Game.h"
 #include <fstream>
 #include <glm/gtc/type_ptr.hpp>
 #include <spdlog/spdlog.h>
@@ -131,6 +132,12 @@ void Shader::bind() const {
     glUseProgram(ID);
   else
     spdlog::warn("Unusable shader program.");
+
+  // TODO: remove after use
+  if (!usable) {
+    Game *game = Game::getInstance();
+    game->m_Running = false;
+  }
 }
 
 void Shader::unbind() const { glUseProgram(0); }

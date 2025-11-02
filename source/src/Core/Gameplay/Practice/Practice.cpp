@@ -15,16 +15,20 @@
 
 namespace ProgramValues {
 Shader shaderObject;
+Shader shaderLight;
 Camera camera;
 Model model;
+Model bulb;
 DirLight dirLight;
 PointLight pointLight;
 glm::mat4 projection;
 } // namespace ProgramValues
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
+static Shader *shaderLight = &ProgramValues::shaderLight;
 static Camera *camera = &ProgramValues::camera;
 static Model *model = &ProgramValues::model;
+static Model *bulb = &ProgramValues::bulb;
 static ProgramValues::DirLight *dirLight = &ProgramValues::dirLight;
 static ProgramValues::PointLight *pointLight = &ProgramValues::pointLight;
 static glm::mat4 *projection = &ProgramValues::projection;
@@ -36,10 +40,19 @@ void Practice::init() {
   { // ProgramValues
     Game *game = Game::getInstance();
 
+    // Shaders
     shaderObject->init(
         (std::string(CMAKE_SOURCE_PATH) + "/shaders/source.glsl").c_str());
-    model->loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
 
+    shaderLight->init(
+        (std::string(CMAKE_SOURCE_PATH) + "/shaders/light.glsl").c_str());
+
+    // Models
+    model->loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
+    bulb->loadModel(std::string(ASSET_PATH) +
+                    "/models/low_poly_light_bulb.glb");
+
+    // Lights
     dirLight->direction = glm::vec3(0.0f, -5.0f, 0.0f);
     dirLight->ambient = glm::vec3(0.2f);
     dirLight->diffuse = glm::vec3(0.45f);
@@ -105,6 +118,15 @@ void Practice::update(const float &deltaTime) {
   shaderObject->setVec3("u_ViewPos", camera->position);
 
   shaderObject->unbind();
+
+  shaderLight->bind();
+  // Sync bulb model position to point light position
+  pointLight->position = glm::vec3(bulb->transform[3]);
+  bulb->update(*shaderLight);
+  // 3D Matrices
+  shaderLight->setMat4("u_Projection", *projection); // u_Projection of glsl
+  shaderLight->setMat4("u_View", camera->getViewMatrix());
+  shaderLight->unbind();
 }
 
 void Practice::render() {
@@ -113,4 +135,8 @@ void Practice::render() {
   model->Draw(*shaderObject);
   glDisable(GL_CULL_FACE);
   shaderObject->unbind();
+  //
+  // shaderLight->bind();
+  // bulb->Draw(*shaderLight);
+  // shaderLight->unbind();
 }

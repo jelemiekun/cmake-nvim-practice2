@@ -25,8 +25,10 @@ struct PointLight {
 };
 
 extern Shader shaderObject;
+extern Shader shaderLight;
 extern Camera camera;
 extern Model model;
+extern Model bulb;
 extern DirLight dirLight;
 extern PointLight pointLight;
 extern glm::mat4 projection;

@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "Shader.h"
 #include <glm/ext/matrix_float4x4.hpp>
 #include <spdlog/spdlog.h>
 

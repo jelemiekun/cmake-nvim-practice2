@@ -116,13 +116,13 @@ void ImGUIWindow::render() {
   }
 
   { // Position
-    ImGui::SeparatorText("Light Position");
+    ImGui::SeparatorText("Light Point Position");
     ImGui::DragFloat("Light Point Position X",
-                     &ProgramValues::pointLight.position.r, 0.05f);
+                     &ProgramValues::bulb.transform[3].x, 0.05f);
     ImGui::DragFloat("Light Point Position Y",
-                     &ProgramValues::pointLight.position.g, 0.05f);
+                     &ProgramValues::bulb.transform[3].y, 0.05f);
     ImGui::DragFloat("Light Point Position Z",
-                     &ProgramValues::pointLight.position.b, 0.05f);
+                     &ProgramValues::bulb.transform[3].z, 0.05f);
   }
   { // Configurable terms
     ImGui::DragFloat("Light Point Constant",
