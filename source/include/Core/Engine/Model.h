@@ -32,7 +32,6 @@ public:
   Model(bool gamma = false);
   Model(std::string const &path, bool gamma = false);
   void loadModel(std::string const &path);
-  void update(Shader &shader);
   void Draw(Shader &shader);
   void syncSoftBodyVertices(); // Optionally remove this, only used for soft
                                // body physics

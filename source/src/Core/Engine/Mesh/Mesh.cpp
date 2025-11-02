@@ -54,8 +54,13 @@ void Mesh::setupMesh() {
   glBindVertexArray(0);
 }
 
-void Mesh::update(Shader &shader, const glm::mat4 &transform,
-                  const glm::vec3 &ambient, const float &shininess) {
+void Mesh::Draw(Shader &shader, const glm::mat4 &transform,
+                const glm::vec3 &ambient, const float &shininess) {
+  if (indices.empty()) {
+    spdlog::warn("Mesh::Draw() - No index data found!");
+    return;
+  }
+
   int diffuseNum = 0;
   int specularNum = 0;
   // Binds all the textures to their own texture units and sets the respective
@@ -76,13 +81,6 @@ void Mesh::update(Shader &shader, const glm::mat4 &transform,
   shader.setMat4("u_Model", transformedMesh);
   shader.setVec3("material.ambient", ambient);
   shader.setFloat("material.shininess", shininess);
-}
-
-void Mesh::Draw(Shader &shader) {
-  if (indices.empty()) {
-    spdlog::warn("Mesh::Draw() - No index data found!");
-    return;
-  }
 
   // Draws the mesh
   glBindVertexArray(vao);

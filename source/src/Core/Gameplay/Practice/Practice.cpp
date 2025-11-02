@@ -58,7 +58,7 @@ void Practice::init() {
     dirLight->diffuse = glm::vec3(0.45f);
     dirLight->specular = glm::vec3(0.57f);
 
-    pointLight->position = glm::vec3(7.0f, -8.0f, 0.0f);
+    pointLight->position = glm::vec3(1.0f);
     pointLight->constant = 1.0f;
     pointLight->linear = 0.35f;
     pointLight->quadratic = 0.44f;
@@ -95,7 +95,6 @@ void Practice::update(const float &deltaTime) {
   camera->update();
 
   shaderObject->bind();
-  model->update(*shaderObject); // u_Model of glsl
   // 3D Matrices
   shaderObject->setMat4("u_Projection", *projection); // u_Projection of glsl
   shaderObject->setMat4("u_View", camera->getViewMatrix());
@@ -122,7 +121,6 @@ void Practice::update(const float &deltaTime) {
   shaderLight->bind();
   // Sync bulb model position to point light position
   pointLight->position = glm::vec3(bulb->transform[3]);
-  bulb->update(*shaderLight);
   // 3D Matrices
   shaderLight->setMat4("u_Projection", *projection); // u_Projection of glsl
   shaderLight->setMat4("u_View", camera->getViewMatrix());
@@ -135,8 +133,8 @@ void Practice::render() {
   model->Draw(*shaderObject);
   glDisable(GL_CULL_FACE);
   shaderObject->unbind();
-  //
-  // shaderLight->bind();
-  // bulb->Draw(*shaderLight);
-  // shaderLight->unbind();
+
+  shaderLight->bind();
+  bulb->Draw(*shaderLight);
+  shaderLight->unbind();
 }

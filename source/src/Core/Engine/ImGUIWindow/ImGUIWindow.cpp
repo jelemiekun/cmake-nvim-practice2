@@ -126,7 +126,7 @@ void ImGUIWindow::render() {
   }
   { // Configurable terms
     ImGui::DragFloat("Light Point Constant",
-                     &ProgramValues::pointLight.constant, 1.0f, 1.0f, 1.0f,
+                     &ProgramValues::pointLight.constant, 1.0f, 1000.0f, 1.0f,
                      "%.1f");
     ImGui::DragFloat("Light Point Linear", &ProgramValues::pointLight.linear,
                      0.0005f, 0.0001f, 1.0f, "%.4f");

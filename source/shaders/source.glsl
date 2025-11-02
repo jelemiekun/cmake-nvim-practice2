@@ -109,7 +109,7 @@ void main() {
 
     vec3 result = vec3(0.0f);
 
-    result += CalcDirLight(dirLight, norm, viewDir);
+    // result += CalcDirLight(dirLight, norm, viewDir);
     result += CalcPointLight(pointLight, norm, viewDir);
 
     FragColor = vec4(result, 1.0f);

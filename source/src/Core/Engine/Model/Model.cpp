@@ -18,14 +18,9 @@ Model::Model(bool gamma)
     : transform(glm::mat4(1.0f)), ambient(glm::vec3(0.2f)), shininess(32),
       gammaCorrection(gamma) {}
 
-void Model::update(Shader &shader) {
-  for (unsigned int i = 0; i < meshes.size(); i++)
-    meshes[i].update(shader, transform, ambient, shininess);
-}
-
 void Model::Draw(Shader &shader) {
   for (unsigned int i = 0; i < meshes.size(); i++)
-    meshes[i].Draw(shader);
+    meshes[i].Draw(shader, transform, ambient, shininess);
 }
 
 // Optionally remove this, only used for soft body physics
