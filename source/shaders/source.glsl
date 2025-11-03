@@ -52,7 +52,9 @@ struct PointLight {
 struct SpotLight {
     vec3 position;
     vec3 direction;
-    float cutoff;
+
+    float innerCutoff;
+    float outerCutoff;
 
     vec3 ambient;
     vec3 diffuse;
@@ -119,37 +121,32 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 viewDir) {
 }
 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 viewDir) {
-    vec3 result = vec3(0.0f);
     vec3 lightDir = normalize(light.position - v_FragPos);
-    float theta = dot(lightDir, normalize(-light.direction));
 
     // Calculating Attenuation
     float distance = length(light.position - v_FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
-    // Base ambient term
-    vec3 ambient = light.ambient * vec3(texture(material.texture_diffuse1, v_TexCoord));
+    // Calculating Spotlight Intensity
+    float theta = dot(lightDir, normalize(-light.direction));
+    float epsilon = light.innerCutoff - light.outerCutoff;
+    float intensity = clamp((theta - light.outerCutoff) / epsilon, 0.0, 1.0); // ensures intensity is between 0.0 and 1.0
 
-    // Check if within the spotlight cone
-    if (theta > light.cutoff) {
-        // Diffuse
-        vec3 diffTexColor = vec3(texture(material.texture_diffuse1, v_TexCoord));
-        float diff = max(dot(normal, lightDir), 0.0);
-        vec3 diffuse = light.diffuse * diff * attenuation * diffTexColor;
+    // Ambient Lighting
+    vec3 diffTexColor = vec3(texture(material.texture_diffuse1, v_TexCoord));
+    vec3 ambient = light.ambient * diffTexColor; // ambient lighting should be unaffected by spotLight intensity
 
-        // Specular
-        vec3 specTexColor = vec3(texture(material.texture_specular1, v_TexCoord));
-        vec3 reflectDir = reflect(-lightDir, normal);
-        float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-        vec3 specular = light.specular * spec * attenuation * specTexColor;
+    // Diffuse Lighting
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 diffuse = light.diffuse * diff * diffTexColor * attenuation * intensity;
 
-        result = ambient + diffuse + specular;
-    } else {
-        // Default color = ambient (in case outside spotlight)
-        result = ambient;
-    }
+    // Specular Lighting
+    vec3 specTexColor = vec3(texture(material.texture_specular1, v_TexCoord));
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    vec3 specular = light.specular * spec * specTexColor * attenuation * intensity;
 
-    return result;
+    return ambient + diffuse + specular;
 }
 
 void main() {

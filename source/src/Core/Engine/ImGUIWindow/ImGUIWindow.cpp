@@ -166,8 +166,12 @@ void ImGUIWindow::render() {
   }
   { // Spot Light
     ImGui::SeparatorText("Spot Light Cutoff");
-    ImGui::SliderFloat("Spot Light Cutoff Value",
-                       &ProgramValues::spotLight.cutoff, 0.0f, 360.0f, "%.0f");
+    ImGui::SliderFloat("Spot Light Inner Cutoff Value",
+                       &ProgramValues::spotLight.innerCutoff, 0.0f, 360.0f,
+                       "%.0f");
+    ImGui::SliderFloat("Spot Light Outer Cutoff Value",
+                       &ProgramValues::spotLight.outerCutoff, 0.0f, 360.0f,
+                       "%.0f");
   }
   ImGui::End();
 

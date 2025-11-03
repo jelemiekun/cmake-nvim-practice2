@@ -68,7 +68,8 @@ void Practice::init() {
     pointLight->diffuse = glm::vec3(0.45f);
     pointLight->specular = glm::vec3(0.57f);
 
-    spotLight->cutoff = glm::cos(glm::radians(12.5));
+    spotLight->innerCutoff = glm::cos(glm::radians(12.5));
+    spotLight->outerCutoff = glm::cos(glm::radians(17.5));
     spotLight->ambient = glm::vec3(0.3f);
     spotLight->diffuse = glm::vec3(0.65f);
     spotLight->specular = glm::vec3(0.87f);
@@ -126,8 +127,10 @@ void Practice::update(const float &deltaTime) {
   // Spot Light
   shaderObject->setVec3("spotLight.position", camera->position);
   shaderObject->setVec3("spotLight.direction", camera->front);
-  shaderObject->setFloat("spotLight.cutoff",
-                         glm::cos(glm::radians(spotLight->cutoff)));
+  shaderObject->setFloat("spotLight.innerCutoff",
+                         glm::cos(glm::radians(spotLight->innerCutoff)));
+  shaderObject->setFloat("spotLight.outerCutoff",
+                         glm::cos(glm::radians(spotLight->outerCutoff)));
   shaderObject->setVec3("spotLight.ambient", spotLight->ambient);
   shaderObject->setVec3("spotLight.diffuse", spotLight->diffuse);
   shaderObject->setVec3("spotLight.specular", spotLight->specular);

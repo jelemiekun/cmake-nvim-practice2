@@ -25,7 +25,8 @@ struct PointLight {
 };
 
 struct SpotLight {
-  float cutoff;
+  float innerCutoff;
+  float outerCutoff;
   glm::vec3 ambient;
   glm::vec3 diffuse;
   glm::vec3 specular;
