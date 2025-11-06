@@ -37,6 +37,7 @@ struct SpotLight {
 
 extern Shader shaderObject;
 extern Shader shaderLight;
+extern Shader shaderOutline;
 extern Camera camera;
 extern Model model;
 extern Model bulb;

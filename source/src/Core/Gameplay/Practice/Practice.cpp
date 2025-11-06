@@ -16,6 +16,7 @@
 namespace ProgramValues {
 Shader shaderObject;
 Shader shaderLight;
+Shader shaderOutline;
 Camera camera;
 Model model;
 Model bulb;
@@ -27,6 +28,7 @@ glm::mat4 projection;
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
 static Shader *shaderLight = &ProgramValues::shaderLight;
+static Shader *shaderOutline = &ProgramValues::shaderOutline;
 static Camera *camera = &ProgramValues::camera;
 static Model *model = &ProgramValues::model;
 static Model *bulb = &ProgramValues::bulb;
@@ -48,6 +50,9 @@ void Practice::init() {
 
     shaderLight->init(
         (std::string(CMAKE_SOURCE_PATH) + "/shaders/light.glsl").c_str());
+
+    shaderOutline->init(
+        (std::string(CMAKE_SOURCE_PATH) + "/shaders/outline.glsl").c_str());
 
     // Models
     model->loadModel(std::string(ASSET_PATH) + "/models/earth_1.glb");
@@ -150,14 +155,40 @@ void Practice::update(const float &deltaTime) {
   shaderLight->setMat4("u_Projection", *projection); // u_Projection of glsl
   shaderLight->setMat4("u_View", camera->getViewMatrix());
   shaderLight->unbind();
+
+  shaderOutline->bind();
+  shaderOutline->setMat4("u_Projection", *projection); // u_Projection of glsl
+  shaderOutline->setMat4("u_View", camera->getViewMatrix());
+  shaderOutline->unbind();
 }
 
 void Practice::render() {
+  glEnable(GL_STENCIL_TEST);
+
   shaderObject->bind();
-  glEnable(GL_CULL_FACE);
+  glStencilMask(0xFF);
+  glStencilFunc(GL_ALWAYS, 1, 0xFF);
+  glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+  glm::mat4 origModelTrans = model->transform;
   model->Draw(*shaderObject);
-  glDisable(GL_CULL_FACE);
   shaderObject->unbind();
+
+  shaderOutline->bind();
+  glEnable(GL_DEPTH_TEST);
+
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_FRONT);
+  glStencilMask(0x00);
+  glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+  model->transform = glm::scale(model->transform, glm::vec3(1.02f));
+  model->Draw(*shaderOutline);
+  glCullFace(GL_BACK);
+  glDisable(GL_CULL_FACE);
+  shaderOutline->unbind();
+
+  model->transform = origModelTrans;
+  glStencilMask(0xFF);
+  glStencilFunc(GL_ALWAYS, 1, 0xFF);
 
   shaderLight->bind();
   bulb->Draw(*shaderLight);

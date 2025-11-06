@@ -59,6 +59,7 @@ void Game::setOpenGLAttributes() {
 
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+  SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
   spdlog::info("OpenGL Attributes Setting Done.");
 }
@@ -159,7 +160,8 @@ void Game::update() {
 
 void Game::render() {
   glClearColor(0.4, 0.4, 0.4, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearStencil(0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
   Practice::render();
 
