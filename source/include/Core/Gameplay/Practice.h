@@ -41,6 +41,7 @@ extern Shader shaderOutline;
 extern Camera camera;
 extern Model model;
 extern Model bulb;
+extern Model plain_glass;
 extern DirLight dirLight;
 extern PointLight pointLight;
 extern SpotLight spotLight;
