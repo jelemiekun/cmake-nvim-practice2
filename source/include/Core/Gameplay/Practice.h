@@ -46,6 +46,7 @@ extern DirLight dirLight;
 extern PointLight pointLight;
 extern SpotLight spotLight;
 extern glm::mat4 projection;
+extern float alphaCutoff;
 } // namespace ProgramValues
 
 namespace Practice {

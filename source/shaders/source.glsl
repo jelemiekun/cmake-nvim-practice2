@@ -76,6 +76,8 @@ uniform SpotLight spotLight;
 
 uniform vec3 u_ViewPos;
 
+uniform float u_AlphaCutoff;
+
 vec4 diffTexColor;
 vec4 specTexColor;
 
@@ -163,7 +165,7 @@ void main() {
     result += CalcPointLight(pointLight, norm, viewDir);
     result += CalcSpotLight(spotLight, norm, viewDir);
 
-    if (diffTexColor.a < 0.8)
+    if (diffTexColor.a <= u_AlphaCutoff)
         discard;
 
     FragColor = vec4(result, diffTexColor.a);

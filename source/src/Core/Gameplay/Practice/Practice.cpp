@@ -25,6 +25,7 @@ DirLight dirLight;
 PointLight pointLight;
 SpotLight spotLight;
 glm::mat4 projection;
+float alphaCutoff = 0.1;
 } // namespace ProgramValues
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
@@ -38,6 +39,7 @@ static ProgramValues::DirLight *dirLight = &ProgramValues::dirLight;
 static ProgramValues::PointLight *pointLight = &ProgramValues::pointLight;
 static ProgramValues::SpotLight *spotLight = &ProgramValues::spotLight;
 static glm::mat4 *projection = &ProgramValues::projection;
+static float *alphaCutoff = &ProgramValues::alphaCutoff;
 
 void Practice::init() {
   glEnable(GL_DEPTH_TEST);
@@ -149,6 +151,9 @@ void Practice::update(const float &deltaTime) {
 
   // Camera
   shaderObject->setVec3("u_ViewPos", camera->position);
+
+  // Alpha Cutoff
+  shaderObject->setFloat("u_AlphaCutoff", *alphaCutoff);
 
   shaderObject->unbind();
 
