@@ -190,6 +190,105 @@ void ImGUIWindow::render() {
   }
   ImGui::End();
 
+  ImGui::Begin("Blending");
+  {
+    const char *items[] = {"GL_ZERO",           "GL_ONE",
+                           "GL_SRC_COLOR",      "GL_ONE_MINUS_SRC_COLOR",
+                           "GL_DST_COLOR",      "GL_ONE_MINUS_DST_COLOR",
+                           "GL_SRC_ALPHA",      "GL_ONE_MINUS_SRC_ALPHA",
+                           "GL_DST_ALPHA",      "GL_ONE_MINUS_DST_ALPHA",
+                           "GL_CONSTANT_COLOR", "GL_ONE_MINUS_CONSTANT_COLOR",
+                           "GL_CONSTANT_ALPHA", "GL_ONE_MINUS_CONSTANT_ALPHA"};
+
+    static ImGuiComboFlags flags = 0;
+    static int s_item_selected_idx = 0;
+    static int r_item_selected_idx = 0;
+
+    {
+      const char *s_combo_preview_value = items[s_item_selected_idx];
+
+      if (ImGui::BeginCombo("Source Value", s_combo_preview_value, flags)) {
+        static ImGuiTextFilter filter;
+        if (ImGui::IsWindowAppearing()) {
+          ImGui::SetKeyboardFocusHere();
+          filter.Clear();
+        }
+        ImGui::SetNextItemShortcut(ImGuiMod_Ctrl | ImGuiKey_F);
+        filter.Draw("##Filter", -FLT_MIN);
+
+        for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+          const bool is_selected = (s_item_selected_idx == n);
+          if (filter.PassFilter(items[n]))
+            if (ImGui::Selectable(items[n], is_selected))
+              s_item_selected_idx = n;
+        }
+        ImGui::EndCombo();
+      }
+    }
+    {
+      const char *r_combo_preview_value = items[r_item_selected_idx];
+
+      if (ImGui::BeginCombo("Destination Value", r_combo_preview_value,
+                            flags)) {
+        static ImGuiTextFilter filter;
+        if (ImGui::IsWindowAppearing()) {
+          ImGui::SetKeyboardFocusHere();
+          filter.Clear();
+        }
+        ImGui::SetNextItemShortcut(ImGuiMod_Ctrl | ImGuiKey_F);
+        filter.Draw("##Filter", -FLT_MIN);
+
+        for (int n = 0; n < IM_ARRAYSIZE(items); n++) {
+          const bool is_selected = (r_item_selected_idx == n);
+          if (filter.PassFilter(items[n]))
+            if (ImGui::Selectable(items[n], is_selected))
+              r_item_selected_idx = n;
+        }
+        ImGui::EndCombo();
+      }
+    }
+
+    auto getGLEnum = [](const std::string &value) -> unsigned int {
+      unsigned int output = 0;
+
+      if (value == "GL_ZERO") {
+        output = GL_ZERO;
+      } else if (value == "GL_ONE") {
+        output = GL_ONE;
+      } else if (value == "GL_SRC_COLOR") {
+        output = GL_SRC_COLOR;
+      } else if (value == "GL_ONE_MINUS_SRC_COLOR") {
+        output = GL_ONE_MINUS_SRC_COLOR;
+      } else if (value == "GL_DST_COLOR") {
+        output = GL_DST_COLOR;
+      } else if (value == "GL_ONE_MINUS_DST_ALPHA") {
+        output = GL_ONE_MINUS_DST_ALPHA;
+      } else if (value == "GL_SRC_ALPHA") {
+        output = GL_SRC_ALPHA;
+      } else if (value == "GL_ONE_MINUS_SRC_ALPHA") {
+        output = GL_ONE_MINUS_SRC_ALPHA;
+      } else if (value == "GL_DST_ALPHA") {
+        output = GL_DST_ALPHA;
+      } else if (value == "GL_ONE_MINUS_DST_ALPHA") {
+        output = GL_ONE_MINUS_DST_ALPHA;
+      } else if (value == "GL_CONSTANT_COLOR") {
+        output = GL_CONSTANT_COLOR;
+      } else if (value == "GL_ONE_MINUS_CONSTANT_COLOR") {
+        output = GL_ONE_MINUS_CONSTANT_COLOR;
+      } else if (value == "GL_CONSTANT_ALPHA") {
+        output = GL_CONSTANT_ALPHA;
+      } else if (value == "GL_ONE_MINUS_CONSTANT_ALPHA") {
+        output = GL_ONE_MINUS_CONSTANT_ALPHA;
+      }
+
+      return output;
+    };
+
+    ProgramValues::sourceEnum = getGLEnum(items[s_item_selected_idx]);
+    ProgramValues::dstEnum = getGLEnum(items[r_item_selected_idx]);
+  }
+  ImGui::End();
+
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

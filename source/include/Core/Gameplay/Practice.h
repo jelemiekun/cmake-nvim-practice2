@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <glm/glm.hpp>
+#include <string>
 
 class Shader;
 class Camera;
@@ -46,6 +47,8 @@ extern DirLight dirLight;
 extern PointLight pointLight;
 extern SpotLight spotLight;
 extern glm::mat4 projection;
+extern unsigned int sourceEnum;
+extern unsigned int dstEnum;
 } // namespace ProgramValues
 
 namespace Practice {

@@ -25,6 +25,8 @@ DirLight dirLight;
 PointLight pointLight;
 SpotLight spotLight;
 glm::mat4 projection;
+unsigned int sourceEnum;
+unsigned int dstEnum;
 } // namespace ProgramValues
 
 static Shader *shaderObject = &ProgramValues::shaderObject;
@@ -38,6 +40,8 @@ static ProgramValues::DirLight *dirLight = &ProgramValues::dirLight;
 static ProgramValues::PointLight *pointLight = &ProgramValues::pointLight;
 static ProgramValues::SpotLight *spotLight = &ProgramValues::spotLight;
 static glm::mat4 *projection = &ProgramValues::projection;
+static unsigned int *sourceEnum = &ProgramValues::sourceEnum;
+static unsigned int *dstEnum = &ProgramValues::dstEnum;
 
 void Practice::init() {
   glEnable(GL_DEPTH_TEST);
@@ -199,7 +203,7 @@ void Practice::render() {
   shaderLight->unbind();
 
   glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+  glBlendFunc(*sourceEnum, *dstEnum);
 
   shaderObject->bind();
   glStencilMask(0x00);
