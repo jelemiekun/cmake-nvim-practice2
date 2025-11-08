@@ -175,15 +175,6 @@ void Practice::render() {
   glEnable(GL_STENCIL_TEST);
 
   shaderObject->bind();
-  glStencilMask(0x00);
-  static bool scaled = false;
-  if (!scaled) {
-    plain_glass->transform =
-        glm::scale(plain_glass->transform, glm::vec3(20.0f));
-    scaled = true;
-  }
-  plain_glass->Draw(*shaderObject);
-
   glStencilMask(0xFF);
   glStencilFunc(GL_ALWAYS, 1, 0xFF);
   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -211,4 +202,20 @@ void Practice::render() {
   shaderLight->bind();
   bulb->Draw(*shaderLight);
   shaderLight->unbind();
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  shaderObject->bind();
+  glStencilMask(0x00);
+  static bool scaled = false;
+  if (!scaled) {
+    plain_glass->transform =
+        glm::scale(plain_glass->transform, glm::vec3(20.0f));
+    plain_glass->transform =
+        glm::translate(plain_glass->transform, glm::vec3(0.0f, 0.0f, 0.7f));
+    scaled = true;
+  }
+  plain_glass->Draw(*shaderObject);
+  shaderObject->unbind();
 }
