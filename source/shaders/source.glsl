@@ -165,8 +165,5 @@ void main() {
     result += CalcPointLight(pointLight, norm, viewDir);
     result += CalcSpotLight(spotLight, norm, viewDir);
 
-    if (diffTexColor.a <= u_AlphaCutoff)
-        discard;
-
     FragColor = vec4(result, diffTexColor.a);
 }
