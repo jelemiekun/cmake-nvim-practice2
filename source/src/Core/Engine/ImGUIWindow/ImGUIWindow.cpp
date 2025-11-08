@@ -190,14 +190,6 @@ void ImGUIWindow::render() {
   }
   ImGui::End();
 
-  ImGui::Begin("Alpha Cutoff");
-  {
-    ImGui::SeparatorText("Value");
-    ImGui::SliderFloat("Alpha Cutoff Value", &ProgramValues::alphaCutoff, 0.0f,
-                       1.0f, "%.1f");
-  }
-  ImGui::End();
-
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
