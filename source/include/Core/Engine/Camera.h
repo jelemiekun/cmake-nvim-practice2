@@ -35,8 +35,6 @@ public:
 
   void processMouseMotion(SDL_Event &event);
 
-  void setViewToShader(GLuint shaderID, const std::string &uniformName) const;
-
   void update();
 
   float getFOV() const;

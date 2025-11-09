@@ -4,7 +4,7 @@ project(GamePrac VERSION 1.0.0.0 LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(packages SDL2 spdlog glm assimp)
+set(packages SDL2 spdlog glm assimp Bullet)
 
 message(STATUS "Appending ${CMAKE_SOURCE_DIR}/cmake to CMAKE_MODULE_PATH")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")

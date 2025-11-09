@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL.h>
+#include <glm/ext/matrix_float4x4.hpp>
 #include <glm/glm.hpp>
-#include <string>
 
 class Shader;
 class Camera;
@@ -36,19 +36,14 @@ struct SpotLight {
   float quadratic;
 };
 
-extern Shader shaderObject;
-extern Shader shaderLight;
-extern Shader shaderOutline;
-extern Camera camera;
-extern Model model;
-extern Model bulb;
-extern Model plain_glass;
-extern DirLight dirLight;
-extern PointLight pointLight;
-extern SpotLight spotLight;
+extern Shader sourceShader;
+extern Camera *camera;
+extern Camera cameraFF;  // Free Fly
+extern Camera cameraFPV; // First Person View
+extern Camera cameraFV;  // Front View
+extern Camera cameraBV;  // Back View
+extern Model ship_in_clouds;
 extern glm::mat4 projection;
-extern unsigned int sourceEnum;
-extern unsigned int dstEnum;
 } // namespace ProgramValues
 
 namespace Practice {

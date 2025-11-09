@@ -147,13 +147,6 @@ void Camera::processMouseMotion(SDL_Event &event) {
   }
 }
 
-void Camera::setViewToShader(GLuint shaderID,
-                             const std::string &uniformName) const {
-  glm::mat4 view = getViewMatrix();
-  glUniformMatrix4fv(glGetUniformLocation(shaderID, uniformName.c_str()), 1,
-                     GL_FALSE, &view[0][0]);
-}
-
 void Camera::update() {
   SDL_SetRelativeMouseMode(ProgramValues::KeyEvents::isLockedIn ? SDL_TRUE
                                                                 : SDL_FALSE);
