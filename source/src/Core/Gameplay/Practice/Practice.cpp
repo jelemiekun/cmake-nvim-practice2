@@ -10,7 +10,6 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include <glm/trigonometric.hpp>
-#include <spdlog/spdlog.h>
 #include <string>
 
 namespace ProgramValues {
@@ -172,19 +171,20 @@ void Practice::update(const float &deltaTime) {
 
 void Practice::render() {
   glEnable(GL_STENCIL_TEST);
+  glEnable(GL_CULL_FACE);
 
   shaderObject->bind();
   glStencilMask(0xFF);
   glStencilFunc(GL_ALWAYS, 1, 0xFF);
   glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
   glm::mat4 origModelTrans = model->transform;
+  glCullFace(GL_BACK);
   model->Draw(*shaderObject);
   shaderObject->unbind();
 
   shaderOutline->bind();
   glEnable(GL_DEPTH_TEST);
 
-  glEnable(GL_CULL_FACE);
   glCullFace(GL_FRONT);
   glStencilMask(0x00);
   glStencilFunc(GL_NOTEQUAL, 1, 0xFF);

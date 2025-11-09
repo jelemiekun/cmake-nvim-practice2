@@ -201,8 +201,8 @@ void ImGUIWindow::render() {
                            "GL_CONSTANT_ALPHA", "GL_ONE_MINUS_CONSTANT_ALPHA"};
 
     static ImGuiComboFlags flags = 0;
-    static int s_item_selected_idx = 0;
-    static int r_item_selected_idx = 0;
+    static int s_item_selected_idx = 6;
+    static int r_item_selected_idx = 7;
 
     {
       const char *s_combo_preview_value = items[s_item_selected_idx];
