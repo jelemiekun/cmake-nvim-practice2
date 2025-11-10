@@ -35,6 +35,10 @@ public:
   void Draw(Shader &shader);
   void syncSoftBodyVertices(); // Optionally remove this, only used for soft
                                // body physics
+  void setPosition(const glm::vec3 &position);
+  void setRotation(float angleDegrees, const glm::vec3 &axis);
+  void setRotation(const glm::quat &quaternion);
+  void setTransform(const glm::mat4 &transform);
 
 private:
   void processNode(aiNode *node, const aiScene *scene,

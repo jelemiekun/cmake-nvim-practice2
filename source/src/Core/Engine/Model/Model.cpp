@@ -1,6 +1,7 @@
 #include "Model.h"
 #include "stb_image.h"
 #include <glm/ext/matrix_float4x4.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <spdlog/spdlog.h>
 
 static unsigned int TextureFromFile(const char *path,
@@ -197,6 +198,28 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat,
     }
   }
   return textures;
+}
+
+void Model::setPosition(const glm::vec3 &position) {
+  transform[3] = glm::vec4(position, 1.0f);
+}
+
+void Model::setRotation(float angleDegrees, const glm::vec3 &axis) {
+  glm::vec3 translation = glm::vec3(transform[3]);
+
+  transform = glm::mat4(1.0f);
+  transform = glm::rotate(transform, glm::radians(angleDegrees), axis);
+  transform[3] = glm::vec4(translation, 1.0f);
+}
+
+void Model::setRotation(const glm::quat &quaternion) {
+  glm::vec3 translation = glm::vec3(transform[3]);
+  transform = glm::mat4_cast(quaternion);
+  transform[3] = glm::vec4(translation, 1.0f);
+}
+
+void Model::setTransform(const glm::mat4 &transform) {
+  this->transform = transform;
 }
 
 static unsigned int TextureFromFile(const char *path,

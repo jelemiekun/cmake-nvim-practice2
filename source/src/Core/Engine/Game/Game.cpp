@@ -11,7 +11,7 @@
 #include <spdlog/spdlog.h>
 
 // Constructors and Destructors
-Game::Game() : m_Window(nullptr), imgui(nullptr) {
+Game::Game() : m_Window(nullptr) {
   spdlog::info("[Game::Game]: An instance of Game class has created.");
 }
 
@@ -120,11 +120,20 @@ bool Game::loadGLAD() {
 }
 
 bool Game::initImGUIWindow() {
-  imgui = ImGUIWindow::getInstance();
-  return imgui->init(m_Window, m_GLContext);
+  return ImGUIWindow::getInstance()->init(m_Window, m_GLContext);
 }
 
-bool Game::initBulletPhysics() { return Physics::getInstance()->init(); }
+bool Game::initBulletPhysics() {
+  if (!Physics::getInstance()->init()) {
+    return false;
+    spdlog::info("Bullet Physics failed to initialize.");
+  }
+
+  Physics::getInstance()->initCharacter();
+  Physics::getInstance()->initShapes();
+
+  return true;
+}
 
 void Game::initGLViewPort() { glViewport(0, 0, m_WindowWidth, m_WindowHeight); }
 
@@ -166,7 +175,8 @@ void Game::handleInput() {
 
 void Game::update() {
   calculateDeltaTime();
-  Practice::update(deltaTime);
+  Physics::getInstance()->dynamicsWorld->stepSimulation(m_DeltaTime, 10);
+  Practice::update(m_DeltaTime);
 }
 
 void Game::render() {
@@ -176,6 +186,7 @@ void Game::render() {
 
   Practice::render();
 
+  static ImGUIWindow *imgui = ImGUIWindow::getInstance();
   imgui->render();
   SDL_GL_SwapWindow(m_Window);
 }
@@ -184,8 +195,8 @@ void Game::calculateDeltaTime() {
   static Uint64 lastCounter = SDL_GetPerformanceCounter();
   Uint64 currentCounter = SDL_GetPerformanceCounter();
 
-  deltaTime = static_cast<float>(currentCounter - lastCounter) /
-              static_cast<float>(SDL_GetPerformanceFrequency());
+  m_DeltaTime = static_cast<float>(currentCounter - lastCounter) /
+                static_cast<float>(SDL_GetPerformanceFrequency());
 
   lastCounter = currentCounter;
 }

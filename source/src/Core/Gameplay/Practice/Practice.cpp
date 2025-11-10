@@ -1,14 +1,20 @@
 #include "Practice.h"
 #include "Camera.h"
 #include "Game.h"
+#include "LinearMath/btQuaternion.h"
+#include "LinearMath/btVector3.h"
 #include "Model.h"
+#include "Physics.h"
 #include "Shader.h"
 #include <SDL_events.h>
 #include <SDL_keycode.h>
+#include <bullet/LinearMath/btTransform.h>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/vector_float3.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <glm/trigonometric.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -56,10 +62,26 @@ void Practice::handleInput(SDL_Event &event, SDL_Window *window) {
 void Practice::update(const float &deltaTime) {
   Shader *p_SourceShader = &ProgramValues::sourceShader;
   Camera *p_Camera = ProgramValues::camera;
+  Model *p_ShipInClouds = &ProgramValues::shipInClouds;
 
   // Shaders
   p_SourceShader->setMat4("u_View", p_Camera->getViewMatrix());
   p_SourceShader->setMat4("u_Projection", ProgramValues::projection);
+
+  // Models
+  Physics *physics = Physics::getInstance();
+  {
+    btTransform trans;
+    physics->sphereBody->getMotionState()->getWorldTransform(trans);
+    btVector3 pos = trans.getOrigin();
+    btQuaternion rot = trans.getRotation();
+
+    glm::vec3 cubePos(pos.x(), pos.y(), pos.z());
+    glm::quat cubeRot(rot.w(), rot.x(), rot.y(), rot.z());
+
+    p_ShipInClouds->setPosition(cubePos);
+    p_ShipInClouds->setRotation(cubeRot);
+  }
 
   // Cameras
   p_Camera->update();

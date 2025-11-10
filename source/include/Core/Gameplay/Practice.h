@@ -42,7 +42,7 @@ extern Camera cameraFF;  // Free Fly
 extern Camera cameraFPV; // First Person View
 extern Camera cameraFV;  // Front View
 extern Camera cameraBV;  // Back View
-extern Model ship_in_clouds;
+extern Model shipInClouds;
 extern glm::mat4 projection;
 } // namespace ProgramValues
 
