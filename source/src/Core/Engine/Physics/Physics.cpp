@@ -4,14 +4,19 @@
 #include "BulletCollision/CollisionShapes/btCapsuleShape.h"
 #include "BulletCollision/CollisionShapes/btConvexShape.h"
 #include "BulletCollision/CollisionShapes/btSphereShape.h"
+#include "BulletCollision/CollisionShapes/btStaticPlaneShape.h"
 #include "BulletDynamics/Character/btKinematicCharacterController.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
+#include "LinearMath/btDefaultMotionState.h"
+#include "LinearMath/btQuaternion.h"
 #include "LinearMath/btVector3.h"
 #include <spdlog/spdlog.h>
+#include <vector>
 
 Physics::Physics()
     : collisionConfig(nullptr), dispatcher(nullptr), broadphase(nullptr),
-      solver(nullptr), dynamicsWorld(nullptr), capsule(nullptr),
+      solver(nullptr), dynamicsWorld(nullptr), sphere(nullptr), plane(nullptr),
+      sphereBody(nullptr), planeBody(nullptr), capsule(nullptr),
       ghostObject(nullptr), character(nullptr) {}
 
 const btVector3 Physics::DEFAULT_GRAVITY(0.0f, -9.8f, 0.0f);
@@ -65,34 +70,53 @@ void Physics::initCharacter() {
       ghostObject, btBroadphaseProxy::CharacterFilter,
       btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter);
 
-  spdlog::info("MEOW4");
   character = new btKinematicCharacterController(ghostObject, capsule, 0.35f);
 
-  spdlog::info("MEOW5");
   dynamicsWorld->addCharacter(character);
   spdlog::info("Bullet physics character initialized successfully.");
 }
 
 void Physics::initShapes() {
   spdlog::info("Initializing bullet physics shapes...");
-  capsule = new btSphereShape(btScalar(10.0f));
+  std::vector<btRigidBody *> bodiesToAdd = std::vector<btRigidBody *>();
 
-  btScalar mass = 5515.0f;
-  btVector3 inertia(0, 0, 0);
+  {
+    capsule = new btSphereShape(btScalar(10.0f));
 
-  capsule->calculateLocalInertia(mass, inertia);
+    btScalar mass = 5515.0f;
+    btVector3 inertia(0, 0, 0);
 
-  btTransform startTransform;
-  startTransform.setIdentity();
-  startTransform.setOrigin(btVector3(0, 5, 0)); // place at y=5
+    capsule->calculateLocalInertia(mass, inertia);
 
-  btDefaultMotionState *motionState = new btDefaultMotionState(startTransform);
+    btTransform startTransform;
+    startTransform.setIdentity();
+    startTransform.setOrigin(btVector3(0, 100, 0));
 
-  btRigidBody::btRigidBodyConstructionInfo info(mass, motionState, capsule,
-                                                inertia);
-  sphereBody = new btRigidBody(info);
+    btDefaultMotionState *motionState =
+        new btDefaultMotionState(startTransform);
 
-  dynamicsWorld->addRigidBody(sphereBody);
+    btRigidBody::btRigidBodyConstructionInfo info(mass, motionState, capsule,
+                                                  inertia);
+
+    sphereBody = new btRigidBody(info);
+    bodiesToAdd.push_back(sphereBody);
+  }
+
+  {
+    plane = new btStaticPlaneShape(btVector3(0, 1, 0), 0);
+    btDefaultMotionState *planeMotion = new btDefaultMotionState(
+        btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+
+    btRigidBody::btRigidBodyConstructionInfo info(0, planeMotion, plane,
+                                                  btVector3(0, 0, 0));
+
+    planeBody = new btRigidBody(info);
+    bodiesToAdd.push_back(planeBody);
+  }
+
+  for (const auto &body : bodiesToAdd) {
+    dynamicsWorld->addRigidBody(body);
+  }
   spdlog::info("Bullet physics shapes initialized successfully.");
 }
 

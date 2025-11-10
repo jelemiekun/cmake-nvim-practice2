@@ -1,5 +1,7 @@
+#include "BulletCollision/CollisionShapes/btCollisionShape.h"
 #include "BulletCollision/CollisionShapes/btConvexShape.h"
 #include "BulletCollision/CollisionShapes/btSphereShape.h"
+#include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "LinearMath/btVector3.h"
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include <BulletCollision/CollisionShapes/btCapsuleShape.h>
@@ -24,7 +26,10 @@ public:
   btDiscreteDynamicsWorld *dynamicsWorld;
 
   btSphereShape *sphere;
+  btCollisionShape *plane;
+
   btRigidBody *sphereBody;
+  btRigidBody *planeBody;
 
   btConvexShape *capsule;
   btPairCachingGhostObject *ghostObject;
