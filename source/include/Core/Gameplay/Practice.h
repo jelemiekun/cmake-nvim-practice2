@@ -51,4 +51,5 @@ extern void init();
 extern void handleInput(SDL_Event &event, SDL_Window *window);
 extern void update(const float &deltaTime);
 extern void render();
+extern void free();
 } // namespace Practice

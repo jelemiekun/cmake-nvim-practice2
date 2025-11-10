@@ -15,5 +15,5 @@ public:
 
   bool init(SDL_Window *window, SDL_GLContext glContext) const;
   void render();
-  void clean();
+  void free();
 };

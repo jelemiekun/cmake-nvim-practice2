@@ -162,3 +162,22 @@ void Shader::setMat4(const std::string &name, const glm::mat4 &value) {
 void Shader::setVec3(const std::string &name, const glm::vec3 &value) {
   glUniform3f(getUniformLocation(name), value.r, value.g, value.b);
 }
+
+void Shader::free() {
+  if (usable) {
+    spdlog::info("Cleaning up shader program (ID: {})", ID);
+    glUseProgram(0);
+    glDeleteProgram(ID);
+    ID = 0;
+    usable = false;
+    uniformLocationCache.clear();
+  } else if (ID != 0) {
+    spdlog::info("Cleaning up invalid or incomplete shader program (ID: {})",
+                 ID);
+    glDeleteProgram(ID);
+    ID = 0;
+    uniformLocationCache.clear();
+  } else {
+    spdlog::debug("Shader::clean() called but no program to delete.");
+  }
+}

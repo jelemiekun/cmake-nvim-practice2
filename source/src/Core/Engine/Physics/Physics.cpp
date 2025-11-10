@@ -40,3 +40,13 @@ bool Physics::init(const btVector3 &gravity) {
   spdlog::info("Bullet Physics initiated successfully.");
   return true;
 }
+
+void Physics::free() {
+  spdlog::info("Destroying Bullet physics resources...");
+  delete dynamicsWorld;
+  delete solver;
+  delete broadphase;
+  delete dispatcher;
+  delete collisionConfig;
+  spdlog::info("Bullet physics resources destroyed sucessfully.");
+}

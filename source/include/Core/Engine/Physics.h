@@ -25,4 +25,5 @@ public:
   static Physics *getInstance();
 
   bool init(const btVector3 &gravity = btVector3(0.0f, -9.8f, 0.0f));
+  void free();
 };

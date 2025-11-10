@@ -71,3 +71,9 @@ void Practice::render() {
   ProgramValues::sourceShader.bind();
   ProgramValues::shipInClouds.Draw(ProgramValues::sourceShader);
 }
+
+void Practice::free() {
+  spdlog::info("Deleting gameplay practice resources...");
+  ProgramValues::sourceShader.free();
+  spdlog::info("Gameplay practice resources destroyed successfully.");
+}

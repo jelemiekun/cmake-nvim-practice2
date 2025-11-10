@@ -86,8 +86,10 @@ void ImGUIWindow::render() {
   }
 }
 
-void ImGUIWindow::clean() {
+void ImGUIWindow::free() {
+  spdlog::info("Destroying ImGUI resources...");
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplSDL2_Shutdown();
   ImGui::DestroyContext();
+  spdlog::info("ImGUI resources destroyed successfully.");
 }

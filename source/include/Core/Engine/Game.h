@@ -52,4 +52,5 @@ private:
 
   // Others
   void calculateDeltaTime();
+  void free();
 };

@@ -9,5 +9,6 @@ int main(int argc, char *argv[]) {
   game->run();
 
   spdlog::info("Program terminated.");
+  spdlog::shutdown();
   return 0;
 }

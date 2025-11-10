@@ -135,22 +135,31 @@ void Game::gameLoop() {
     render();
   }
   spdlog::info("Gameloop terminated.");
+  free();
 }
 
 void Game::handleInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
-    ImGui_ImplSDL2_ProcessEvent(&event);
-    if (event.type == SDL_QUIT)
+    if (event.type == SDL_QUIT ||
+        (event.type == SDL_WINDOWEVENT &&
+         event.window.event == SDL_WINDOWEVENT_CLOSE &&
+         event.window.windowID == SDL_GetWindowID(m_Window))) {
+      spdlog::info("Detected window close!");
       m_Running = false;
-    if (event.type == SDL_WINDOWEVENT &&
-        event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-      m_WindowWidth = event.window.data1;
-      m_WindowHeight = event.window.data2;
-
-      glViewport(0, 0, m_WindowWidth, m_WindowHeight);
+      return;
     }
 
+    if (event.type == SDL_KEYDOWN) {
+      auto e_Key = event.key.keysym.sym;
+      if ((e_Key == SDLK_LALT && e_Key == SDLK_F4) ||
+          (e_Key == SDLK_RALT && e_Key == SDLK_F4)) {
+        m_Running = false;
+        return;
+      }
+    }
+
+    ImGui_ImplSDL2_ProcessEvent(&event);
     Practice::handleInput(event, m_Window);
   }
 }
@@ -179,4 +188,15 @@ void Game::calculateDeltaTime() {
               static_cast<float>(SDL_GetPerformanceFrequency());
 
   lastCounter = currentCounter;
+}
+
+void Game::free() {
+  spdlog::info("Destroying game resources...");
+  Practice::free();
+  Physics::getInstance()->free();
+  ImGUIWindow::getInstance()->free();
+  SDL_DestroyWindow(m_Window);
+  SDL_GL_DeleteContext(m_GLContext);
+  SDL_Quit();
+  spdlog::info("Game resources destroyed successfully.");
 }
