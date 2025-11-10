@@ -40,6 +40,7 @@ private:
   bool initOpenGLContext();
   bool loadGLAD();
   bool initImGUIWindow();
+  bool initBulletPhysics();
   void initGLViewPort();
 
   // Game Loop

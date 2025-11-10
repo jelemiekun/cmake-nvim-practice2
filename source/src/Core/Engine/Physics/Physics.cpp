@@ -1,5 +1,4 @@
 #include "Physics.h"
-#include "LinearMath/btVector3.h"
 #include <spdlog/spdlog.h>
 
 Physics::Physics() {}

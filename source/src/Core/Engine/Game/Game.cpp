@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "Camera.h"
 #include "ImGUIWindow.h"
+#include "Physics.h"
 #include "Practice.h"
 #include "backends/imgui_impl_sdl2.h"
 #include <SDL2/SDL.h>
@@ -31,7 +32,7 @@ void Game::run() {
   setOpenGLAttributes();
 
   m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD() &&
-              initImGUIWindow();
+              initImGUIWindow() && initBulletPhysics();
 
   if (m_Running) {
     spdlog::info("Initializing openGL Viewport...");
@@ -41,7 +42,6 @@ void Game::run() {
     Practice::init();
 
     spdlog::info("Entering game loop...");
-
     gameLoop();
   } else {
     spdlog::error("Initialization failed. Failed to enter game loop.");
@@ -123,6 +123,8 @@ bool Game::initImGUIWindow() {
   imgui = ImGUIWindow::getInstance();
   return imgui->init(m_Window, m_GLContext);
 }
+
+bool Game::initBulletPhysics() { return Physics::getInstance()->init(); }
 
 void Game::initGLViewPort() { glViewport(0, 0, m_WindowWidth, m_WindowHeight); }
 
