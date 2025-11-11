@@ -2,6 +2,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "imgui.h"
+#include "imgui_internal.h"
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
@@ -61,18 +62,85 @@ bool ImGUIWindow::init(SDL_Window *window, SDL_GLContext glContext) const {
   return initSuccess;
 }
 
+void ImGUIWindow::createRootDockSpace() {
+  ImGuiIO &io = ImGui::GetIO();
+  IM_ASSERT(io.ConfigFlags & ImGuiConfigFlags_DockingEnable);
+
+  ImGuiViewport *viewport = ImGui::GetMainViewport();
+
+  ImGui::SetNextWindowPos(viewport->Pos);
+  ImGui::SetNextWindowSize(viewport->Size);
+  ImGui::SetNextWindowViewport(viewport->ID);
+
+  ImGuiWindowFlags window_flags =
+      ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+      ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+      ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
+      ImGuiWindowFlags_NoDocking;
+
+  ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
+
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+  ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+  ImGui::Begin("MainDockSpaceWindow", nullptr, window_flags);
+  ImGui::PopStyleVar(2);
+
+  ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
+  ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+  static bool first_time = true;
+  if (first_time) {
+    first_time = false;
+
+    ImGui::DockBuilderRemoveNode(dockspace_id); // clear any existing layout
+    ImGui::DockBuilderAddNode(
+        dockspace_id,
+        dockspace_flags |
+            ImGuiDockNodeFlags_DockSpace); // creates a new dock node
+    ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+
+    ImGuiID dock_main_id = dockspace_id;
+    ImGuiID dock_left_id = ImGui::DockBuilderSplitNode(
+        dock_main_id, ImGuiDir_Left, 0.25f, nullptr, &dock_main_id);
+    ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(
+        dock_main_id, ImGuiDir_Right, 0.25f, nullptr, &dock_main_id);
+
+    ImGui::DockBuilderDockWindow("Demo Window", dock_main_id);
+    ImGui::DockBuilderDockWindow("Left Panel", dock_left_id);
+    ImGui::DockBuilderDockWindow("Right Panel", dock_right_id);
+
+    ImGui::DockBuilderFinish(dockspace_id);
+  }
+
+  ImGui::End();
+}
+
 void ImGUIWindow::render() {
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplSDL2_NewFrame();
   ImGui::NewFrame();
+  createRootDockSpace();
 
   ImGuiIO &io = ImGui::GetIO();
+
+  ImGuiWindowFlags window_flags =
+      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
+      ImGuiWindowFlags_NoNavFocus;
 
   ImGui::ShowDemoWindow();
 
   // Your GUI code
+  ImGui::Begin("Left Panel", nullptr, window_flags);
+  ImGui::Text("Meow!");
+  ImGui::End();
 
+  ImGui::Begin("Right Panel", nullptr, window_flags);
+  ImGui::Text("Meow!");
+  ImGui::End();
   ImGui::Render();
+
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {

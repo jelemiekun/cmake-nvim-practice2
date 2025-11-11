@@ -1,6 +1,6 @@
 message(STATUS "Loading ${CMAKE_CURRENT_LIST_FILE}")
 
-add_library(Physics "${CMAKE_CURRENT_LIST_DIR}/Physics.cpp")
+add_library(Physics "${CMAKE_CURRENT_LIST_DIR}/Physics.cpp" "${CMAKE_CURRENT_LIST_DIR}/RigidBody.cpp")
 target_include_directories(Physics PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../../../include/Core/Engine")
 
 if(UNIX)

@@ -31,6 +31,7 @@ public:
   // Class Private Methods
 private:
   // Initializers
+  void initEverything();
   void setOpenGLAttributes();
   bool initSDL();
   bool initWindow();

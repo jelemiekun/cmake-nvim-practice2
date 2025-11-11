@@ -14,6 +14,7 @@ public:
   static ImGUIWindow *getInstance();
 
   bool init(SDL_Window *window, SDL_GLContext glContext) const;
+  void createRootDockSpace();
   void render();
   void free();
 };

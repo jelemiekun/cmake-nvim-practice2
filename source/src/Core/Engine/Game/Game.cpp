@@ -28,11 +28,7 @@ Game *Game::getInstance() {
 // Class Public Methods
 void Game::run() {
   spdlog::info("Initiating game...");
-
-  setOpenGLAttributes();
-
-  m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD() &&
-              initImGUIWindow() && initBulletPhysics();
+  initEverything();
 
   if (m_Running) {
     spdlog::info("Initializing openGL Viewport...");
@@ -49,6 +45,16 @@ void Game::run() {
 }
 
 // Class Private Methods
+
+void Game::initEverything() {
+  spdlog::info("Initializing everything...");
+
+  setOpenGLAttributes();
+
+  m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD() &&
+              initImGUIWindow() && initBulletPhysics();
+}
+
 void Game::setOpenGLAttributes() {
   spdlog::info("Setting OpenGL Attributes...");
 
@@ -76,8 +82,8 @@ bool Game::initSDL() {
 }
 
 bool Game::initWindow() {
-  int initWindowWidth = 800;
-  int initWindowHeight = 600;
+  int initWindowWidth = 1600;
+  int initWindowHeight = 920;
 
   m_Window = SDL_CreateWindow("OpenGL Window", SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED, initWindowWidth,
@@ -120,7 +126,13 @@ bool Game::loadGLAD() {
 }
 
 bool Game::initImGUIWindow() {
-  return ImGUIWindow::getInstance()->init(m_Window, m_GLContext);
+  bool initSuccess = ImGUIWindow::getInstance()->init(m_Window, m_GLContext);
+
+  if (!initSuccess) {
+    spdlog::warn("Failed to initialize ImGUIWindow.");
+    return false;
+  }
+  return true;
 }
 
 bool Game::initBulletPhysics() {
@@ -128,9 +140,6 @@ bool Game::initBulletPhysics() {
     return false;
     spdlog::info("Bullet Physics failed to initialize.");
   }
-
-  Physics::getInstance()->initCharacter();
-  Physics::getInstance()->initShapes();
 
   return true;
 }

@@ -71,16 +71,6 @@ void Practice::update(const float &deltaTime) {
   // Models
   Physics *physics = Physics::getInstance();
   {
-    btTransform trans;
-    physics->sphereBody->getMotionState()->getWorldTransform(trans);
-    btVector3 pos = trans.getOrigin();
-    btQuaternion rot = trans.getRotation();
-
-    glm::vec3 cubePos(pos.x(), pos.y(), pos.z());
-    glm::quat cubeRot(rot.w(), rot.x(), rot.y(), rot.z());
-
-    p_ShipInClouds->setPosition(cubePos);
-    p_ShipInClouds->setRotation(cubeRot);
   }
 
   // Cameras
