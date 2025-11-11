@@ -6,7 +6,9 @@ target_include_directories(Physics PUBLIC "${CMAKE_CURRENT_LIST_DIR}/../../../..
 if(UNIX)
     target_include_directories(Physics PUBLIC /usr/include/bullet)
 elseif(WIN32)
-    find_package(Bullet CONFIG REQUIRED)
+  target_include_directories(Physics PUBLIC ${BULLET_INCLUDE_DIRS})
+  target_include_directories(Physics PUBLIC "C:/vcpkg/installed/x64-windows/include" "C:/vcpkg/installed/x64-windows/include/bullet" ${BULLET_INCLUDE_DIRS})
+  link_directories("C:/vcpkg/installed/x64-windows/lib")
 endif()
 
 
