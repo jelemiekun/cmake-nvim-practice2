@@ -1,8 +1,7 @@
 #include "Practice.h"
 #include "Camera.h"
 #include "Game.h"
-#include "LinearMath/btQuaternion.h"
-#include "LinearMath/btVector3.h"
+#include "ImGUIWindow.h"
 #include "Model.h"
 #include "Physics.h"
 #include "Shader.h"
@@ -78,10 +77,17 @@ void Practice::update(const float &deltaTime) {
 }
 
 void Practice::render() {
+  static ImGUIWindow *imGUIWindow = ImGUIWindow::getInstance();
+
+  glBindFramebuffer(GL_FRAMEBUFFER, imGUIWindow->fbo);
+  glViewport(0, 0, imGUIWindow->renderWidth, imGUIWindow->renderHeight);
   glEnable(GL_DEPTH_TEST);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   ProgramValues::sourceShader.bind();
   ProgramValues::shipInClouds.Draw(ProgramValues::sourceShader);
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Practice::free() {

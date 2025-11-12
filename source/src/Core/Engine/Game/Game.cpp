@@ -126,7 +126,10 @@ bool Game::loadGLAD() {
 }
 
 bool Game::initImGUIWindow() {
-  bool initSuccess = ImGUIWindow::getInstance()->init(m_Window, m_GLContext);
+  ImGUIWindow *imguiWindow = ImGUIWindow::getInstance();
+  bool initSuccess =
+      imguiWindow->init(m_Window, m_GLContext) &&
+      imguiWindow->initImGuiWindowRenderSpace(m_WindowWidth, m_WindowHeight);
 
   if (!initSuccess) {
     spdlog::warn("Failed to initialize ImGUIWindow.");
@@ -177,6 +180,14 @@ void Game::handleInput() {
       }
     }
 
+    if (event.type == SDL_WINDOWEVENT &&
+        event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+      m_WindowWidth = event.window.data1;
+      m_WindowHeight = event.window.data2;
+      ImGUIWindow::getInstance()->resizeFramebuffer(m_WindowWidth,
+                                                    m_WindowHeight);
+    }
+
     ImGui_ImplSDL2_ProcessEvent(&event);
     Practice::handleInput(event, m_Window);
   }
@@ -195,8 +206,7 @@ void Game::render() {
 
   Practice::render();
 
-  static ImGUIWindow *imgui = ImGUIWindow::getInstance();
-  imgui->render();
+  ImGUIWindow::getInstance()->render();
   SDL_GL_SwapWindow(m_Window);
 }
 
