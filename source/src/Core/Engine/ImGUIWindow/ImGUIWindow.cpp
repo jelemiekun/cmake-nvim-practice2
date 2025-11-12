@@ -8,6 +8,7 @@
 #include <spdlog/spdlog.h>
 
 const static constexpr char *OPENGL_VERSION = "#version 410";
+bool ImGUIWindow::willResetLayout = true;
 
 ImGUIWindow::ImGUIWindow() {}
 
@@ -42,10 +43,9 @@ bool ImGUIWindow::init(SDL_Window *window, SDL_GLContext glContext) const {
   ImGuiStyle &style = ImGui::GetStyle();
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     style.WindowRounding = 0.0f;
-    style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    style.Colors[ImGuiCol_WindowBg].w = 0.2f;
   }
 
-  // Setup Platform/Renderer backends
   // Setup Platform/Renderer backends
   if (!ImGui_ImplSDL2_InitForOpenGL(window, glContext)) {
     spdlog::error("Failed to initialize ImGui SDL2 backend.");
@@ -75,8 +75,7 @@ void ImGUIWindow::createRootDockSpace() {
   ImGuiWindowFlags window_flags =
       ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-      ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
-      ImGuiWindowFlags_NoDocking;
+      ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
   ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
@@ -89,31 +88,33 @@ void ImGUIWindow::createRootDockSpace() {
   ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 
-  static bool first_time = true;
-  if (first_time) {
-    first_time = false;
-
-    ImGui::DockBuilderRemoveNode(dockspace_id); // clear any existing layout
-    ImGui::DockBuilderAddNode(
-        dockspace_id,
-        dockspace_flags |
-            ImGuiDockNodeFlags_DockSpace); // creates a new dock node
-    ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
-
-    ImGuiID dock_main_id = dockspace_id;
-    ImGuiID dock_left_id = ImGui::DockBuilderSplitNode(
-        dock_main_id, ImGuiDir_Left, 0.25f, nullptr, &dock_main_id);
-    ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(
-        dock_main_id, ImGuiDir_Right, 0.25f, nullptr, &dock_main_id);
-
-    ImGui::DockBuilderDockWindow("Demo Window", dock_main_id);
-    ImGui::DockBuilderDockWindow("Left Panel", dock_left_id);
-    ImGui::DockBuilderDockWindow("Right Panel", dock_right_id);
-
-    ImGui::DockBuilderFinish(dockspace_id);
+  if (willResetLayout) {
+    willResetLayout = false;
+    resetLayout();
   }
 
   ImGui::End();
+}
+
+void ImGUIWindow::resetLayout() {
+  ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
+
+  ImGui::DockBuilderRemoveNode(dockspace_id); // clear any existing layout
+  ImGui::DockBuilderAddNode(
+      dockspace_id, ImGuiDockNodeFlags_DockSpace); // creates a new dock node
+  ImGui::DockBuilderSetNodeSize(dockspace_id, ImGui::GetMainViewport()->Size);
+
+  ImGuiID dock_main_id = dockspace_id;
+  ImGuiID dock_left_id = ImGui::DockBuilderSplitNode(
+      dock_main_id, ImGuiDir_Left, 0.25f, nullptr, &dock_main_id);
+  ImGuiID dock_right_id = ImGui::DockBuilderSplitNode(
+      dock_main_id, ImGuiDir_Right, 0.25f, nullptr, &dock_main_id);
+
+  ImGui::DockBuilderDockWindow("Dear ImGui Demo", dock_main_id);
+  ImGui::DockBuilderDockWindow("Left Panel", dock_left_id);
+  ImGui::DockBuilderDockWindow("Right Panel", dock_right_id);
+
+  ImGui::DockBuilderFinish(dockspace_id);
 }
 
 void ImGUIWindow::render() {
@@ -124,19 +125,21 @@ void ImGUIWindow::render() {
 
   ImGuiIO &io = ImGui::GetIO();
 
-  ImGuiWindowFlags window_flags =
-      ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-      ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
-      ImGuiWindowFlags_NoNavFocus;
-
   ImGui::ShowDemoWindow();
 
   // Your GUI code
-  ImGui::Begin("Left Panel", nullptr, window_flags);
-  ImGui::Text("Meow!");
+  ImGui::Begin("Left Panel");
+  ImGui::Text("Reset Layout");
+  static int b_ResetLayout = 0;
+  if (ImGui::Button("Reset"))
+    b_ResetLayout++;
+  if (b_ResetLayout & 1) {
+    willResetLayout = true;
+    b_ResetLayout++;
+  }
   ImGui::End();
 
-  ImGui::Begin("Right Panel", nullptr, window_flags);
+  ImGui::Begin("Right Panel");
   ImGui::Text("Meow!");
   ImGui::End();
   ImGui::Render();

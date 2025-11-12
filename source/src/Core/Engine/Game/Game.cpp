@@ -31,9 +31,6 @@ void Game::run() {
   initEverything();
 
   if (m_Running) {
-    spdlog::info("Initializing openGL Viewport...");
-    initGLViewPort();
-
     spdlog::info("Initializing practice...");
     Practice::init();
 
@@ -53,6 +50,9 @@ void Game::initEverything() {
 
   m_Running = initSDL() && initWindow() && initOpenGLContext() && loadGLAD() &&
               initImGUIWindow() && initBulletPhysics();
+
+  spdlog::info("Initializing openGL Viewport...");
+  initGLViewPort();
 }
 
 void Game::setOpenGLAttributes() {

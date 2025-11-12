@@ -12,9 +12,11 @@ public:
   ImGUIWindow &operator=(ImGUIWindow &&) = delete;
 
   static ImGUIWindow *getInstance();
+  static bool willResetLayout;
 
   bool init(SDL_Window *window, SDL_GLContext glContext) const;
   void createRootDockSpace();
+  void resetLayout();
   void render();
   void free();
 };
