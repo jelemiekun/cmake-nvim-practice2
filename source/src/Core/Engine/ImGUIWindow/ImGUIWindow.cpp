@@ -3,6 +3,7 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "imgui.h"
 #include "imgui_internal.h"
+#include "nfd.h"
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
 #include <spdlog/spdlog.h>
@@ -75,7 +76,8 @@ void ImGUIWindow::createRootDockSpace() {
   ImGuiWindowFlags window_flags =
       ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
       ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-      ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+      ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |
+      ImGuiWindowFlags_MenuBar;
 
   ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_PassthruCentralNode;
 
@@ -84,6 +86,30 @@ void ImGUIWindow::createRootDockSpace() {
 
   ImGui::Begin("MainDockSpaceWindow", nullptr, window_flags);
   ImGui::PopStyleVar(2);
+
+  if (ImGui::BeginMenuBar()) {
+    if (ImGui::BeginMenu("File")) {
+      if (ImGui::MenuItem("New file")) {
+        spdlog::info("Creating new file...");
+      }
+      if (ImGui::MenuItem("Open File", "Ctrl+O", false, true)) {
+        nfdchar_t *outPath = nullptr;
+        nfdresult_t result = NFD_OpenDialog(nullptr, nullptr, &outPath);
+
+        if (result == NFD_OKAY) {
+          std::string path(outPath);
+          ::free(outPath);
+          spdlog::info("File selected: {}", path);
+        } else if (result == NFD_CANCEL) {
+          spdlog::warn("File selection cancelled.");
+        } else {
+          spdlog::warn("NFD Error: {}", NFD_GetError());
+        }
+      }
+      ImGui::EndMenu();
+    }
+    ImGui::EndMenuBar();
+  }
 
   ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
   ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
