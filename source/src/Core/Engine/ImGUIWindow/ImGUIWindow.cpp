@@ -12,11 +12,6 @@
 const static constexpr char *OPENGL_VERSION = "#version 410";
 
 bool ImGUIWindow::willResetLayout = true;
-GLuint ImGUIWindow::fbo = 0;
-GLuint ImGUIWindow::rbo = 0;
-GLuint ImGUIWindow::texture = 0;
-int ImGUIWindow::renderWidth = 0;
-int ImGUIWindow::renderHeight = 0;
 
 ImGUIWindow::ImGUIWindow() {}
 
@@ -51,7 +46,7 @@ bool ImGUIWindow::init(SDL_Window *window, SDL_GLContext glContext) const {
   ImGuiStyle &style = ImGui::GetStyle();
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     style.WindowRounding = 0.0f;
-    style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    style.Colors[ImGuiCol_WindowBg].w = 0.2f;
   }
 
   // Setup Platform/Renderer backends
@@ -68,53 +63,6 @@ bool ImGUIWindow::init(SDL_Window *window, SDL_GLContext glContext) const {
   spdlog::info("ImGui initialized successfully.");
   initSuccess = true;
   return initSuccess;
-}
-
-bool ImGUIWindow::initImGuiWindowRenderSpace(const int &width,
-                                             const int &height) {
-  spdlog::info("Initializing imgui window for rendering space...");
-  bool initSuccess = true;
-
-  // Generate FBO
-  glGenFramebuffers(1, &fbo);
-  glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-  // Create a texture to render to
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, nullptr);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  // Attach texture to FBO
-  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                         texture, 0);
-
-  // Optionally, create a depth buffer if needed
-  glGenRenderbuffers(1, &rbo);
-  glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
-                            GL_RENDERBUFFER, rbo);
-
-  if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    initSuccess = false;
-    spdlog::warn("Framebuffer not complete!");
-  }
-
-  glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-  return initSuccess;
-}
-
-void ImGUIWindow::resizeFramebuffer(const int &width, const int &height) {
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, nullptr);
-
-  glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 }
 
 void ImGUIWindow::createRootDockSpace() {
@@ -226,15 +174,6 @@ void ImGUIWindow::render() {
   ImGui::End();
 
   ImGui::Begin("Render Buffer");
-  ImVec2 contentRegionMax = ImGui::GetWindowContentRegionMax();
-  ImVec2 contentRegionMin = ImGui::GetWindowContentRegionMin();
-  ImVec2 contentSize(contentRegionMax.x - contentRegionMin.x,
-                     contentRegionMax.y - contentRegionMin.y);
-  renderWidth = contentSize.x;
-  renderHeight = contentSize.y;
-  ImGui::Image((void *)(intptr_t)texture,
-               ImVec2(game->m_WindowWidth, game->m_WindowHeight), ImVec2(0, 1),
-               ImVec2(1, 0));
   ImGui::End();
 
   ImGui::Render();

@@ -127,10 +127,7 @@ bool Game::loadGLAD() {
 
 bool Game::initImGUIWindow() {
   ImGUIWindow *imguiWindow = ImGUIWindow::getInstance();
-  bool initSuccess =
-      imguiWindow->init(m_Window, m_GLContext) &&
-      imguiWindow->initImGuiWindowRenderSpace(m_WindowWidth, m_WindowHeight);
-
+  bool initSuccess = imguiWindow->init(m_Window, m_GLContext);
   if (!initSuccess) {
     spdlog::warn("Failed to initialize ImGUIWindow.");
     return false;
@@ -184,8 +181,6 @@ void Game::handleInput() {
         event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
       m_WindowWidth = event.window.data1;
       m_WindowHeight = event.window.data2;
-      ImGUIWindow::getInstance()->resizeFramebuffer(m_WindowWidth,
-                                                    m_WindowHeight);
     }
 
     ImGui_ImplSDL2_ProcessEvent(&event);
