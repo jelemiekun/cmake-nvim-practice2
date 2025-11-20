@@ -155,7 +155,7 @@ void ImGUIWindow::render() {
 
   ImGuiIO &io = ImGui::GetIO();
 
-  ImGui::ShowDemoWindow();
+  // ImGui::ShowDemoWindow();
 
   // Your GUI code
   ImGui::Begin("Left Panel");

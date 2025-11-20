@@ -181,6 +181,8 @@ void Game::handleInput() {
         event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
       m_WindowWidth = event.window.data1;
       m_WindowHeight = event.window.data2;
+
+      ProgramValues::windowResized = true;
     }
 
     ImGui_ImplSDL2_ProcessEvent(&event);

@@ -37,6 +37,7 @@ struct SpotLight {
 };
 
 extern Shader sourceShader;
+extern Shader screenShader;
 extern Camera *camera;
 extern Camera cameraFF;  // Free Fly
 extern Camera cameraFPV; // First Person View
@@ -44,6 +45,11 @@ extern Camera cameraFV;  // Front View
 extern Camera cameraBV;  // Back View
 extern Model shipInClouds;
 extern glm::mat4 projection;
+extern unsigned int framebuffer;
+extern unsigned int rbo;
+extern unsigned int quadVAO;
+extern unsigned int textureColorbuffer;
+extern bool windowResized;
 } // namespace ProgramValues
 
 namespace Practice {
